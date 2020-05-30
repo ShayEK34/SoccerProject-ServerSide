@@ -16,14 +16,14 @@ import Domain.Systems.SystemEventsLog;
 import Domain.AssociationManagement.League;
 import Domain.AssociationManagement.Match;
 import Domain.ClubManagement.TeamInfo;
-import Domain.User.Fan;
-import Domain.User.SystemManager;
-import Domain.User.TeamMember;
-import Domain.User.Referee;
+import Domain.User.*;
 import Domain.User.Referee;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Vector;
@@ -192,7 +192,7 @@ public class Model extends Observable {
         return serverAns.toString();
     }
 
-    public String checkTeamRegistration(String selectedReq) {//"Register Team - TeamName- Liverpool ,ToLeague- Premier League"
+    public String checkTeamRegistration(String username, String selectedReq) {//"Register Team - TeamName- Liverpool ,ToLeague- Premier League"
         String[] separated = selectedReq.split("[-,]");
         String teamName = separated[2].trim();
         String leagueName = separated[4].trim();
@@ -204,6 +204,7 @@ public class Model extends Observable {
         if (t != null && l != null) {
             if (l.addTeam(t)) {
                 db.addTeamToLeague(t.getTeamName(), currentSeasonYear, l.getLeagueName());
+                db.updateAlertDetails(username, selectedReq);
                 return "team was added successfully";
             } else {
                 return "team isnt complete";
@@ -343,7 +344,11 @@ public class Model extends Observable {
                         currentSeasonYear = db.getTheCurrentSeason();
                         for (int i = 0; i < leagueGames.size(); i++) {
                             for (int j = 0; j < leagueGames.get(i).size(); j++) {
-                                db.addGameDetails(currentSeasonYear, league.getLeagueName(), leagueGames.get(i).get(j).getMatchDate().toString(),
+                                Date date = leagueGames.get(i).get(j).getMatchDate();
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                String strDate = dateFormat.format(date);
+
+                                db.addGameDetails(currentSeasonYear, league.getLeagueName(), strDate,
                                         leagueGames.get(i).get(j).getHomeTeam().getTeamName(), leagueGames.get(i).get(j).getAwayTeam().getTeamName(),
                                         leagueGames.get(i).get(j).getHomeTeam().getTeamCourt().getCourtName(),
                                         leagueGames.get(i).get(j).getMainRef().getUserName(), leagueGames.get(i).get(j).getSideRefs().get(0).getUserName(),
@@ -358,14 +363,210 @@ public class Model extends Observable {
                     return "add more main referees - total main referees should be equals to (number of teams in league/2) at least";
                 }
             } else {
-                return "add number of teams in league";
+                return "odd number of teams in league";
             }
         }
         return "League doesn't exist!";
     }
 
+    public ArrayList<String> getRefReqs(String userName) {
+        return db.getAllRefReqs(userName);
+    }
 
-    //
+    public String getAllRefereeMatches(String usernameRef) {
+        StringBuilder allGames = new StringBuilder();
+        ArrayList<Match> getGames = db.getAllRefereeMatches(usernameRef);
+        for (int i = 0; i < getGames.size(); i++) {
+            String date = getGames.get(i).getGameDate();
+            String home = getGames.get(i).getHomeTeam().getTeamName();
+            String away = getGames.get(i).getAwayTeam().getTeamName();
+            String mainRef = getGames.get(i).getMainRef().getUserName();
+            String stadium = getGames.get(i).getCourt().getCourtName();
+
+            if (i == getGames.size() - 1)
+                allGames.append(date).append(" - ").append(home).append(" Against ").
+                        append(away).append(" at ").append(stadium).append(" - Main Referee - ").append(mainRef);
+            else
+                allGames.append(date).append(" - ").append(home).append(" Against ").
+                        append(away).append(" at ").append(stadium).append(" - Main Referee - ").append(mainRef).append("~");
+        }
+
+
+        return allGames.toString();
+    }
+
+    public String getPlayersToManageGame(String homeTeamName, String awayTeamName) {
+        StringBuilder allPlayers = new StringBuilder();
+        TeamInfo home = db.getTeam(homeTeamName);
+        TeamInfo away = db.getTeam(awayTeamName);
+        ArrayList<PlayerInterface> homePlayers = home.getTeamPlayers();
+        ArrayList<PlayerInterface> awayPlayers = away.getTeamPlayers();
+
+
+        for (int i = 0; i < homePlayers.size(); i++) {
+            TeamMember tm = (TeamMember) homePlayers.get(i);
+            allPlayers.append(homeTeamName).append(" - ").append(tm.getUserName()).append(" - ").append(tm.getFirstName())
+                    .append(" ").append(tm.getLastName()).append(":");
+        }
+
+        for (int i = 0; i < awayPlayers.size(); i++) {
+            TeamMember tm = (TeamMember) awayPlayers.get(i);
+            if (i == awayPlayers.size() - 1) {
+                allPlayers.append(awayTeamName).append(" - ").append(tm.getUserName()).append(" - ").append(tm.getFirstName())
+                        .append(" ").append(tm.getLastName());
+            } else
+                allPlayers.append(awayTeamName).append(" - ").append(tm.getUserName()).append(" - ").append(tm.getFirstName())
+                        .append(" ").append(tm.getLastName()).append(":");
+        }
+
+        return allPlayers.toString();
+    }
+
+    public int getMinuteInMatch(Date beginMatch) {
+        Date now = new Date();
+
+        if( beginMatch.getDate()==now.getDate() && beginMatch.getYear()==now.getYear() &&
+                beginMatch.getMonth()==now.getMonth() && beginMatch.getDay()==now.getDay()){
+            long diff = now.getTime() - beginMatch.getTime();
+            int diffMinutes = 0;
+            int diffHours = 0;
+            diffMinutes = (int) (diff / (60 * 1000) % 60);
+            diffHours = (int) (diff / (60 * 60 * 1000) % 24);
+
+            return diffMinutes + diffHours * 60;
+        }
+
+        return -10;
+    }
+
+    public String addGoalEvent(String homeTeamName, String awayTeamName, String mainRefUser,
+                               String teamPlayerScored, String eventType) {
+        if (currentSeasonYear == 0) {
+            currentSeasonYear = db.getTheCurrentSeason();
+        }
+        String teamScored = teamPlayerScored.split("-")[0];
+        String playerScored = teamPlayerScored.split("-")[1];
+        ArrayList<Match> allGames = db.getAllRefereeMatches(mainRefUser);
+        boolean found = false;
+        Match game = null;
+        for (int i = 0; !found && i < allGames.size(); i++) {
+            if (allGames.get(i).getHomeTeam().getTeamName().equals(homeTeamName) &&
+                    allGames.get(i).getAwayTeam().getTeamName().equals(awayTeamName)) {
+                game = allGames.get(i);
+                found = true;
+            }
+        }
+        if (game != null) {
+            Date startGame = null;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            try {
+                startGame = dateFormat.parse(game.getGameDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert startGame != null;
+            int minuteInGame = getMinuteInMatch(startGame);
+            if(minuteInGame < 0){
+                return "game hasn't started";
+            }
+            else if(minuteInGame > 420 ){
+                return "game is over";
+            }
+            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)
+                    && db.updateMatchResult(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, teamScored)) {
+                return "true";
+            }
+        }
+
+        return "false";
+    }
+
+    public String addOffsideFoulYellowRedInjuryEvent(String homeTeamName, String awayTeamName, String mainRefUser,
+                                                     String teamPlayerScored, String eventType) {
+        if (currentSeasonYear == 0) {
+            currentSeasonYear = db.getTheCurrentSeason();
+        }
+        String playerScored = teamPlayerScored.split("-")[1];
+        ArrayList<Match> allGames = db.getAllRefereeMatches(mainRefUser);
+        boolean found = false;
+        Match game = null;
+        for (int i = 0; !found && i < allGames.size(); i++) {
+            if (allGames.get(i).getHomeTeam().getTeamName().equals(homeTeamName) &&
+                    allGames.get(i).getAwayTeam().getTeamName().equals(awayTeamName)) {
+                game = allGames.get(i);
+                found = true;
+            }
+        }
+        if (game != null) {
+            Date startGame = null;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            try {
+                startGame = dateFormat.parse(game.getGameDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert startGame != null;
+            int minuteInGame = getMinuteInMatch(startGame);
+            if(minuteInGame < 0){
+                return "game hasn't started";
+            }
+            else if(minuteInGame > 420 ){
+                return "game is over";
+            }
+            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)) {
+                return "true";
+            }
+        }
+
+        return "false";
+    }
+
+    public String addSubstituteEvent(String homeTeamName, String awayTeamName, String mainRefUser,
+                                     String subs, String eventType) {
+        if (currentSeasonYear == 0) {
+            currentSeasonYear = db.getTheCurrentSeason();
+        }
+        String playerOut = subs.split("-")[0];
+        String playerIn = subs.split("-")[1];
+        ArrayList<Match> allGames = db.getAllRefereeMatches(mainRefUser);
+        boolean found = false;
+        Match game = null;
+        for (int i = 0; !found && i < allGames.size(); i++) {
+            if (allGames.get(i).getHomeTeam().getTeamName().equals(homeTeamName) &&
+                    allGames.get(i).getAwayTeam().getTeamName().equals(awayTeamName)) {
+                game = allGames.get(i);
+                found = true;
+            }
+        }
+        if (game != null) {
+            Date startGame = null;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            try {
+                startGame = dateFormat.parse(game.getGameDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert startGame != null;
+            int minuteInGame = getMinuteInMatch(startGame);
+            if(minuteInGame < 0){
+                return "game hasn't started";
+            }
+            else if(minuteInGame > 420 ){
+                return "game is over";
+            }
+            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerOut, playerIn, eventType)) {
+                return "true";
+            }
+        }
+
+        return "false";
+    }
+
+    /**
+     * Association End -------------------------------------------------------------------
+     * -------------------------------------------------------------------
+     * -------------------------------------------------------------------
+     */
 //
     public String addTeam(String teamName, String esYear, String isActive, String city, String owner, String court) {
         String res="";
@@ -831,7 +1032,7 @@ public class Model extends Observable {
         return ans;
     }
 
-    ////    public void addRefToLeague2(String selectedLeague, String selectedRef) {
+////    public void addRefToLeague2(String selectedLeague, String selectedRef) {
 ////        if(au != null){
 ////            ArrayList<League> leagues = AssociationUser.getBm().get(currentSeasonYear).getBudget().getSeason().getAllLeagues();
 ////            for (int i = 0; i < leagues.size(); i++) {
@@ -977,8 +1178,7 @@ public class Model extends Observable {
 //
 //    }
 //
-    public ArrayList<String> getRefReqs(String userName) {
-        return db.getAllRefReqs(userName);
-    }
+//    public ArrayList<String> getRefReqs(String userName) {
+//        return db.getAllRefReqs(userName);
+//    }
 }
-

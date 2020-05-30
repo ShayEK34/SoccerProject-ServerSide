@@ -150,6 +150,11 @@ public class Match {
         this.events = events;
     }
 
+    public String getGameDate() {
+        return gameDate;
+    }
 
+    public String getResult() {
+        return result;
+    }
 }
-

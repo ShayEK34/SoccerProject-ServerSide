@@ -2311,13 +2311,14 @@ public class UserDaoMdb implements DataBaseInterface {
 
     public ArrayList<Match> getAllRefereeMatches(String refereeUserName) {
         ArrayList<Match> refereeMatches = new ArrayList<>();
+        int season = getTheCurrentSeason();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("matchesDetails");
             MongoCursor<Document> cursor = collection.find().iterator();
             while (cursor.hasNext()) {
                 Document match = cursor.next();
-                if(match.containsValue(refereeUserName)){
+                if(match.containsValue(season) && match.containsValue(refereeUserName)){
                     String date = match.getString("Date");
                     String homeTeam = match.getString("HomeTeam");
                     String awayTeam = match.getString("AwayTeam");
@@ -2442,6 +2443,5 @@ public class UserDaoMdb implements DataBaseInterface {
 
 
 }//end class
-
 
 

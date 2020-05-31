@@ -4,6 +4,7 @@ import Domain.AlertSystem.*;
 import Domain.AssociationManagement.*;
 import Domain.ClubManagement.Court;
 import Domain.ClubManagement.TeamInfo;
+import Domain.Systems.SystemErrorLogs;
 import Domain.User.*;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
@@ -72,6 +73,7 @@ public class UserDaoMdb implements DataBaseInterface {
 
     private static final UserDaoMdb instance = new UserDaoMdb();
     private final String mongoClientURI = "mongodb://132.72.65.132:27017";
+    private static SystemErrorLogs syserror=new SystemErrorLogs();
 
     public static UserDaoMdb getInstance(){
         return instance;
@@ -104,6 +106,11 @@ public class UserDaoMdb implements DataBaseInterface {
 
                 }
             } catch (MongoException e) {
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -153,6 +160,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return true;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -272,6 +284,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return fan;
 
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -297,6 +314,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -330,6 +352,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -385,6 +412,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return false;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -448,6 +480,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
                 return false;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -471,6 +508,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     this.updateUserDetails(firstOwner,teamName,"owners","CurrentTeam");
                     return true;
                 }catch (MongoException e){
+                    try {
+                        syserror.addErrorLog("Server","Connection with db Lost");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     throw new MongoException("Failed to connect the DB!");
                 }
             }
@@ -489,6 +531,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 ownerNotHaveTeam =true;
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return ownerNotHaveTeam;
@@ -507,6 +554,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -559,6 +611,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -588,6 +645,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     return true;
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -605,6 +667,11 @@ public class UserDaoMdb implements DataBaseInterface {
             collection.insertOne(court);
             return true;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -622,6 +689,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -647,6 +719,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -664,6 +741,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     return true;
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -680,6 +762,11 @@ public class UserDaoMdb implements DataBaseInterface {
             collection.insertOne(leagueAndSeason);
             return true;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -714,6 +801,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(leagueAndSeasonPolicy);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -740,6 +832,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -784,6 +881,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -809,6 +911,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -833,6 +940,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -872,6 +984,11 @@ public class UserDaoMdb implements DataBaseInterface {
                         collection.insertOne(teamSign);
                         return true;
                     }catch (MongoException e){
+                        try {
+                            syserror.addErrorLog("Server","Connection with db Lost");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                         throw new MongoException("Failed to connect the DB!");
                     }
                 }
@@ -903,6 +1020,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     collection.insertOne(match);
                     return true;
                 }catch (MongoException e){
+                    try {
+                        syserror.addErrorLog("Server","Connection with db Lost");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                     throw new MongoException("Failed to connect the DB!");
                 }
             }
@@ -923,6 +1045,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return true;
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -941,6 +1068,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return true;
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -959,6 +1091,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return true;
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -979,6 +1116,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -997,6 +1139,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(Alert);
                 return true;
             } catch (MongoException e) {
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1027,6 +1174,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return false;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1044,6 +1196,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(player);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1063,6 +1220,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(coach);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1088,6 +1250,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(teamManager);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1113,6 +1280,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(owner);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1131,6 +1303,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -1148,6 +1325,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -1165,6 +1347,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -1182,6 +1369,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -1203,6 +1395,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1223,6 +1420,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return ownerDetails;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1241,6 +1443,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return playerDetails;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1259,6 +1466,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return coachDetails;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1277,6 +1489,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamManagerDetails;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1294,6 +1511,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 collection.insertOne(referee);
                 return true;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1314,6 +1536,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return refereeDetails;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1331,6 +1558,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return false;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1351,6 +1583,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamPlayers;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1371,6 +1608,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamCoaches;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1392,6 +1634,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamOwners;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
 
@@ -1413,6 +1660,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamManagers;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1449,6 +1701,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return false;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1473,6 +1730,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return returnSeason;
@@ -1497,6 +1759,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1532,6 +1799,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return currentSeasonYear;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1550,6 +1822,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamDetailsInSeason;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1583,6 +1860,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return false;
@@ -1605,6 +1887,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return allReferees;
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1627,6 +1914,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return allReferees;
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1648,6 +1940,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return allLeaguesInCurrentSeason;
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1668,6 +1965,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return allAssociationUsers;
@@ -1689,6 +1991,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return allSystemManagers;
@@ -1757,6 +2064,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return fan;
 
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1825,6 +2137,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 return fan;
 
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -1872,6 +2189,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return AvailablCoaches;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1899,6 +2221,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return AvailablPlayer;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1922,6 +2249,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
 
@@ -1940,11 +2272,16 @@ public class UserDaoMdb implements DataBaseInterface {
                 if(teamName.equals("")){
                     String userName = owner.getString("UserName");
                     TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    AvailablOwners.add(teamplayer.getUserName());
+                    AvailablOwners.add(teamplayer.getUserName()+", "+teamplayer.getFirstName()+", "+teamplayer.getLastName());
                 }
             }
             return AvailablOwners;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1965,6 +2302,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamOwners;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -1986,6 +2328,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return AvailableManagers;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -2006,6 +2353,11 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return teamManagers;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -2025,6 +2377,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return assignUsersAlerts;
@@ -2064,6 +2421,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             } catch (MongoException e) {
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -2085,6 +2447,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
                 return false;
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -2108,6 +2475,11 @@ public class UserDaoMdb implements DataBaseInterface {
                 }
             }
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return leaguesNames;
@@ -2145,6 +2517,11 @@ public class UserDaoMdb implements DataBaseInterface {
                         ));
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return ans;
@@ -2170,6 +2547,11 @@ public class UserDaoMdb implements DataBaseInterface {
                         ));
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return ans;
@@ -2195,6 +2577,11 @@ public class UserDaoMdb implements DataBaseInterface {
                         ));
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return ans;
@@ -2220,6 +2607,11 @@ public class UserDaoMdb implements DataBaseInterface {
                         ));
             }
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
         return ans;
@@ -2256,6 +2648,11 @@ public class UserDaoMdb implements DataBaseInterface {
             collection.insertOne(eventGame);
             return true;
         } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -2305,6 +2702,11 @@ public class UserDaoMdb implements DataBaseInterface {
             collection.insertOne(budget);
             return true;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new MongoException("Failed to connect the DB!");
         }
     }
@@ -2361,6 +2763,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             }catch (MongoException e){
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -2390,6 +2797,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             } catch (MongoException e) {
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }
@@ -2419,6 +2831,11 @@ public class UserDaoMdb implements DataBaseInterface {
                     }
                 }
             } catch (MongoException e) {
+                try {
+                    syserror.addErrorLog("Server","Connection with db Lost");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 throw new MongoException("Failed to connect the DB!");
             }
         }

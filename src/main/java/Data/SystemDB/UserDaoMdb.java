@@ -2891,6 +2891,31 @@ public class UserDaoMdb implements DataBaseInterface {
         return name;
     }
 
+    public HashMap<String,String> getAllEmplyedPlayers(){
+        HashMap<String,String> AvailablPlayer = new HashMap<String,String>();
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("players");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while(cursor.hasNext()){
+                Document player = cursor.next();
+                String nominateBy = player.getString("EmployedBy");
+                if(!nominateBy.equals("")){
+                    String userName = player.getString("UserName");
+                    TeamMember teamplayer = (TeamMember)this.getUser(userName);
+                    AvailablPlayer.put(nominateBy,userName);
+                }
+            }
+            return AvailablPlayer;
+        }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
 
 }//end class
 

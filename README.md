@@ -1,1 +1,1 @@
-Team 6 - FootballPrject, Client Side
+Team 6 - FootballPrject, Server Side

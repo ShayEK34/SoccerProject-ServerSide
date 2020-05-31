@@ -2902,16 +2902,20 @@ public class UserDaoMdb implements DataBaseInterface {
         usersEmployed3.putAll(getAllEmplyedOwners());
         usersEmployed4.putAll(getAllEmplyedTeamMangers());
         for (String term:usersEmployed1.keySet()) {
-            allUsers.put(term,usersEmployed1.get(term));
+            allUsers.put(term, new ArrayList<>());
+            allUsers.get(term).add(String.valueOf(usersEmployed1.get(term)));
         }
         for (String term:usersEmployed2.keySet()) {
-            allUsers.put(term,usersEmployed2.get(term));
+            allUsers.put(term, new ArrayList<>());
+            allUsers.get(term).add(String.valueOf(usersEmployed2.get(term)));
         }
         for (String term:usersEmployed3.keySet()) {
-            allUsers.put(term,usersEmployed3.get(term));
+            allUsers.put(term, new ArrayList<>());
+            allUsers.get(term).add(String.valueOf(usersEmployed3.get(term)));
         }
         for (String term:usersEmployed4.keySet()) {
-            allUsers.put(term,usersEmployed4.get(term));
+            allUsers.put(term, new ArrayList<>());
+            allUsers.get(term).add(String.valueOf(usersEmployed4.get(term)));
         }
         return allUsers;
     }

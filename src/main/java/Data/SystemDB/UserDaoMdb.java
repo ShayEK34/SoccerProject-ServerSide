@@ -2955,7 +2955,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
                     //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    Availablcoach.put(nominateBy,userName);
+                    Availablcoach.put(nominateBy, new ArrayList<>());
+                    Availablcoach.get(nominateBy).add(userName);
                 }
             }
             return Availablcoach;
@@ -2981,7 +2982,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
                     //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    Availablowner.put(nominateBy,userName);
+                    Availablowner.put(nominateBy, new ArrayList<>());
+                    Availablowner.get(nominateBy).add(userName);
                 }
             }
             return Availablowner;
@@ -3007,7 +3009,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
                     //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    AvailablteamMangers.put(nominateBy,userName);
+                    AvailablteamMangers.put(nominateBy, new ArrayList<>());
+                    AvailablteamMangers.get(nominateBy).add(userName);
                 }
             }
             return AvailablteamMangers;

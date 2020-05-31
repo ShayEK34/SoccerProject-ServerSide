@@ -2891,12 +2891,12 @@ public class UserDaoMdb implements DataBaseInterface {
         return name;
     }
 
-    public HashMap<String,String> getAll(){
-        HashMap<String,String> usersEmployed1 = new HashMap<String,String>();
-        HashMap<String,String> usersEmployed2 = new HashMap<String,String>();
-        HashMap<String,String> usersEmployed3 = new HashMap<String,String>();
-        HashMap<String,String> usersEmployed4 = new HashMap<String,String>();
-        HashMap<String,String> allUsers = new HashMap<String,String>();
+    public HashMap<String,ArrayList<String>> getAll(){
+        HashMap<String,ArrayList<String>> usersEmployed1 = new HashMap<String,ArrayList<String>>();
+        HashMap<String,ArrayList<String>> usersEmployed2 = new HashMap<String,ArrayList<String>>();
+        HashMap<String,ArrayList<String>> usersEmployed3 = new HashMap<String,ArrayList<String>>();
+        HashMap<String,ArrayList<String>> usersEmployed4 = new HashMap<String,ArrayList<String>>();
+        HashMap<String,ArrayList<String>> allUsers = new HashMap<String,ArrayList<String>>();
         usersEmployed1.putAll(getAllEmplyedPlayers());
         usersEmployed2.putAll(getAllEmplyedCoachs());
         usersEmployed3.putAll(getAllEmplyedOwners());
@@ -2916,8 +2916,8 @@ public class UserDaoMdb implements DataBaseInterface {
         return allUsers;
     }
 
-    public HashMap<String,String> getAllEmplyedPlayers(){
-        HashMap<String,String> AvailablPlayer = new HashMap<String,String>();
+    public HashMap<String,ArrayList<String>> getAllEmplyedPlayers(){
+       HashMap<String,ArrayList<String>> AvailablPlayer = new HashMap<String,ArrayList<String>>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("players");
@@ -2928,7 +2928,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
                     //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    AvailablPlayer.put(nominateBy,userName);
+                    AvailablPlayer.put(nominateBy, new ArrayList<>());
+                    AvailablPlayer.get(nominateBy).add(userName);
                 }
             }
             return AvailablPlayer;
@@ -2942,8 +2943,8 @@ public class UserDaoMdb implements DataBaseInterface {
         }
     }
 
-    public HashMap<String,String> getAllEmplyedCoachs(){
-        HashMap<String,String> Availablcoach = new HashMap<String,String>();
+    public HashMap<String,ArrayList<String>> getAllEmplyedCoachs(){
+        HashMap<String,ArrayList<String>> Availablcoach = new HashMap<String,ArrayList<String>>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("coaches");
@@ -2968,8 +2969,8 @@ public class UserDaoMdb implements DataBaseInterface {
         }
     }
 
-    public HashMap<String,String> getAllEmplyedOwners(){
-        HashMap<String,String> Availablowner = new HashMap<String,String>();
+    public HashMap<String,ArrayList<String>> getAllEmplyedOwners(){
+        HashMap<String,ArrayList<String>> Availablowner = new HashMap<String,ArrayList<String>>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("owners");
@@ -2994,8 +2995,8 @@ public class UserDaoMdb implements DataBaseInterface {
         }
     }
 
-    public HashMap<String,String> getAllEmplyedTeamMangers(){
-        HashMap<String,String> AvailablteamMangers = new HashMap<String,String>();
+    public HashMap<String,ArrayList<String>> getAllEmplyedTeamMangers(){
+        HashMap<String,ArrayList<String>> AvailablteamMangers = new HashMap<String,ArrayList<String>>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("teamMangers");

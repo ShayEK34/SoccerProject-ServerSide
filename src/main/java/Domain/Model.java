@@ -1008,7 +1008,8 @@ public class Model extends Observable {
                         db.updateUserDetails(nameAsset, "", "players", "CurrentTeam");
                         db.updateUserDetails(nameAsset, "", "players", "EmployedBy");
                         ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
-                        db.getAll();
+                        //db.getAll();
+                        db.getAllEmplyedPlayers();
                     }
                 }
             }

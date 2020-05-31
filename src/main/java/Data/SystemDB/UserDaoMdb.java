@@ -2499,6 +2499,7 @@ public class UserDaoMdb implements DataBaseInterface {
 
     private String resetAllTeamManagersNominated(String userName) {
         String ans="";
+        ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("teamManagers");
@@ -2508,6 +2509,7 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = teammanager.getString("EmployedBy");
                 if (nominateBy.equals(userName)) {
                     ans = ans +", "+ teammanager.getString("UserName");
+                    toRemove.add(teammanager.getString("UserName"));
                 }
                 collection.updateMany(
                         Filters.eq("EmployedBy", userName),
@@ -2515,6 +2517,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
+                for(int i=0; i<toRemove.size();i++){
+                    resetAllTeamManagersNominated(toRemove.get(i));
+                }
             }
         } catch (MongoException e) {
             try {
@@ -2529,6 +2534,7 @@ public class UserDaoMdb implements DataBaseInterface {
 
     private String resetAllOwnersNominated(String userName) {
         String ans="";
+        ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("owners");
@@ -2538,6 +2544,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = owner.getString("EmployedBy");
                 if (nominateBy.equals(userName)) {
                     ans = ans +", "+ owner.getString("UserName");
+                    toRemove.add(owner.getString("UserName"));
+
                 }
                 collection.updateMany(
                         Filters.eq("EmployedBy", userName),
@@ -2545,6 +2553,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
+                for(int i=0; i<toRemove.size();i++){
+                    resetAllOwnersNominated(toRemove.get(i));
+                }
             }
         } catch (MongoException e) {
             try {
@@ -2559,6 +2570,7 @@ public class UserDaoMdb implements DataBaseInterface {
 
     private String resetAllCoachesNominated(String userName) {
         String ans="";
+        ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("coaches");
@@ -2568,6 +2580,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = coach.getString("EmployedBy");
                 if (nominateBy.equals(userName)) {
                     ans = ans +", "+ coach.getString("UserName");
+                    toRemove.add(coach.getString("UserName"));
+
                 }
                 collection.updateMany(
                         Filters.eq("EmployedBy", userName),
@@ -2575,6 +2589,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
+                for(int i=0; i<toRemove.size();i++){
+                    resetAllCoachesNominated(toRemove.get(i));
+                }
             }
         } catch (MongoException e) {
             try {
@@ -2589,6 +2606,7 @@ public class UserDaoMdb implements DataBaseInterface {
 
     private String resetAllPlayerNominated(String userName) {
         String ans="";
+        ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("players");
@@ -2598,6 +2616,8 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if (nominateBy.equals(userName)) {
                     ans = ans +", "+ player.getString("UserName");
+                    toRemove.add(player.getString("UserName"));
+
                 }
                 collection.updateMany(
                         Filters.eq("EmployedBy", userName),
@@ -2605,6 +2625,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
+                for(int i=0; i<toRemove.size();i++){
+                    resetAllPlayerNominated(toRemove.get(i));
+                }
             }
         } catch (MongoException e) {
             try {

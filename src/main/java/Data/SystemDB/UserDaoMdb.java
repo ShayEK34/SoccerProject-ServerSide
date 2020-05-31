@@ -2891,6 +2891,25 @@ public class UserDaoMdb implements DataBaseInterface {
         return name;
     }
 
+    public HashMap<String,String> getAll(){
+//        HashMap<String,String> usersEmployed1 = new HashMap<String,String>();
+//        HashMap<String,String> usersEmployed2 = new HashMap<String,String>();
+//        HashMap<String,String> usersEmployed3 = new HashMap<String,String>();
+//        HashMap<String,String> usersEmployed4 = new HashMap<String,String>();
+//        usersEmployed1.putAll(getAllEmplyedPlayers());
+//        usersEmployed2.putAll(getAllEmplyedCoachs());
+//        usersEmployed3.putAll(getAllEmplyedOwners());
+//        usersEmployed4.putAll(getAllEmplyedTeamMangers());
+//        for(int i=0; i<usersEmployed1.size();i++){
+//        }
+        HashMap<String,String> AllUsers = new HashMap<String,String>();
+        AllUsers.putAll(getAllEmplyedTeamMangers());
+        AllUsers.putAll(getAllEmplyedOwners());
+        AllUsers.putAll(getAllEmplyedPlayers());
+        AllUsers.putAll(getAllEmplyedCoachs());
+        return AllUsers;
+    }
+
     public HashMap<String,String> getAllEmplyedPlayers(){
         HashMap<String,String> AvailablPlayer = new HashMap<String,String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
@@ -2902,11 +2921,89 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
-                    TeamMember teamplayer = (TeamMember)this.getUser(userName);
+                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
                     AvailablPlayer.put(nominateBy,userName);
                 }
             }
             return AvailablPlayer;
+        }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public HashMap<String,String> getAllEmplyedCoachs(){
+        HashMap<String,String> Availablcoach = new HashMap<String,String>();
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("coaches");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while(cursor.hasNext()){
+                Document player = cursor.next();
+                String nominateBy = player.getString("EmployedBy");
+                if(!nominateBy.equals("")){
+                    String userName = player.getString("UserName");
+                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
+                    Availablcoach.put(nominateBy,userName);
+                }
+            }
+            return Availablcoach;
+        }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public HashMap<String,String> getAllEmplyedOwners(){
+        HashMap<String,String> Availablowner = new HashMap<String,String>();
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("owners");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while(cursor.hasNext()){
+                Document player = cursor.next();
+                String nominateBy = player.getString("EmployedBy");
+                if(!nominateBy.equals("")){
+                    String userName = player.getString("UserName");
+                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
+                    Availablowner.put(nominateBy,userName);
+                }
+            }
+            return Availablowner;
+        }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public HashMap<String,String> getAllEmplyedTeamMangers(){
+        HashMap<String,String> AvailablteamMangers = new HashMap<String,String>();
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("teamMangers");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while(cursor.hasNext()){
+                Document player = cursor.next();
+                String nominateBy = player.getString("EmployedBy");
+                if(!nominateBy.equals("")){
+                    String userName = player.getString("UserName");
+                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
+                    AvailablteamMangers.put(nominateBy,userName);
+                }
+            }
+            return AvailablteamMangers;
         }catch (MongoException e){
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");

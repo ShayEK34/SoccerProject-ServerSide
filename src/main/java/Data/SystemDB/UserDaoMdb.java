@@ -2517,9 +2517,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-                for(int i=0; i<toRemove.size();i++){
-                    resetAllTeamManagersNominated(toRemove.get(i));
-                }
+            }
+            for(int i=0; i<toRemove.size();i++){
+                resetAllTeamManagersNominated(toRemove.get(i));
             }
         } catch (MongoException e) {
             try {
@@ -2553,9 +2553,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-                for(int i=0; i<toRemove.size();i++){
-                    resetAllOwnersNominated(toRemove.get(i));
-                }
+            }
+            for(int i=0; i<toRemove.size();i++){
+                resetAllOwnersNominated(toRemove.get(i));
             }
         } catch (MongoException e) {
             try {
@@ -2589,9 +2589,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-                for(int i=0; i<toRemove.size();i++){
-                    resetAllCoachesNominated(toRemove.get(i));
-                }
+            }
+            for(int i=0; i<toRemove.size();i++){
+                resetAllCoachesNominated(toRemove.get(i));
             }
         } catch (MongoException e) {
             try {
@@ -2625,9 +2625,9 @@ public class UserDaoMdb implements DataBaseInterface {
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-                for(int i=0; i<toRemove.size();i++){
-                    resetAllPlayerNominated(toRemove.get(i));
-                }
+            }
+            for(int i=0; i<toRemove.size();i++){
+                resetAllPlayerNominated(toRemove.get(i));
             }
         } catch (MongoException e) {
             try {

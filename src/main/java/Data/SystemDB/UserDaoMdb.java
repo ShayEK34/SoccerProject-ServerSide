@@ -15,6 +15,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -2485,42 +2486,48 @@ public class UserDaoMdb implements DataBaseInterface {
         return leaguesNames;
     }
 
-    public String removeAllLastNominates(String userName){
+    public String removeAllLastNominates(HashMap<String,String> allRelated, String userName){
         String ans="";
-        if(this.isUserExist(userName)) {
-            ans=resetAllPlayerNominated(userName);
-            ans=ans+resetAllCoachesNominated(userName);
-            ans=ans+resetAllOwnersNominated(userName);
-            ans=ans+resetAllTeamManagersNominated(userName);
-            return ans;
+        //if(this.isUserExist(userName)) {
+        for(int i=0; i<allRelated.size();i++){
+            if(allRelated.containsKey(userName)){
+                ans=ans+resetAllPlayerNominated(allRelated,userName);
+                ans=ans+resetAllCoachesNominated(allRelated,userName);
+                ans=ans+resetAllOwnersNominated(allRelated,userName);
+                ans=ans+resetAllTeamManagersNominated(allRelated,userName);
+            }
+            else {
+                ans="";
+            }
         }
-        return "";
+            return ans;
     }
 
-    private String resetAllTeamManagersNominated(String userName) {
+    private String resetAllTeamManagersNominated(HashMap<String,String> allRelated,String userName) {
         String ans="";
-        ArrayList<String > toRemove=new ArrayList<String>();
+       //ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("teamManagers");
-            MongoCursor<Document> cursor = collection.find().iterator();
-            while (cursor.hasNext()) {
-                Document teammanager = cursor.next();
-                String nominateBy = teammanager.getString("EmployedBy");
-                if (nominateBy.equals(userName)) {
-                    ans = ans +", "+ teammanager.getString("UserName");
-                    toRemove.add(teammanager.getString("UserName"));
-                }
+           // MongoCursor<Document> cursor = collection.find().iterator();
+//            while (cursor.hasNext()) {
+//                Document teammanager = cursor.next();
+//                String nominateBy = teammanager.getString("EmployedBy");
+//                if (nominateBy.equals(userName)) {
+                    //ans = teammanager.getString("UserName");
+                    //toRemove.add(teammanager.getString("UserName"));
+               // }
                 collection.updateMany(
-                        Filters.eq("EmployedBy", userName),
+                        Filters.eq("UserName", userName),
                         Updates.combine(
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-            }
-            for(int i=0; i<toRemove.size();i++){
-                resetAllTeamManagersNominated(toRemove.get(i));
-            }
+                removeAllLastNominates(allRelated,userName);
+            //}
+//            for(int i=0; i<toRemove.size();i++){
+//                resetAllTeamManagersNominated(toRemove.get(i));
+//            }
         } catch (MongoException e) {
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");
@@ -2529,34 +2536,35 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             throw new MongoException("Failed to connect the DB!");
         }
-        return ans;
+        return userName;
     }
 
-    private String resetAllOwnersNominated(String userName) {
+    private String resetAllOwnersNominated(HashMap<String,String> allRelated,String userName) {
         String ans="";
-        ArrayList<String > toRemove=new ArrayList<String>();
+        //ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("owners");
-            MongoCursor<Document> cursor = collection.find().iterator();
-            while (cursor.hasNext()) {
-                Document owner = cursor.next();
-                String nominateBy = owner.getString("EmployedBy");
-                if (nominateBy.equals(userName)) {
-                    ans = ans +", "+ owner.getString("UserName");
-                    toRemove.add(owner.getString("UserName"));
-
-                }
+//            MongoCursor<Document> cursor = collection.find().iterator();
+//            while (cursor.hasNext()) {
+//                Document owner = cursor.next();
+//                String nominateBy = owner.getString("EmployedBy");
+//                if (nominateBy.equals(userName)) {
+//                    ans = ans +", "+ owner.getString("UserName");
+//                    toRemove.add(owner.getString("UserName"));
+//
+//                }
                 collection.updateMany(
-                        Filters.eq("EmployedBy", userName),
+                        Filters.eq("UserName", userName),
                         Updates.combine(
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-            }
-            for(int i=0; i<toRemove.size();i++){
-                resetAllOwnersNominated(toRemove.get(i));
-            }
+            removeAllLastNominates(allRelated,userName);
+//            }
+//            for(int i=0; i<toRemove.size();i++){
+//                resetAllOwnersNominated(toRemove.get(i));
+//            }
         } catch (MongoException e) {
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");
@@ -2565,34 +2573,35 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             throw new MongoException("Failed to connect the DB!");
         }
-        return ans;
+        return userName;
     }
 
-    private String resetAllCoachesNominated(String userName) {
+    private String resetAllCoachesNominated(HashMap<String,String> allRelated,String userName) {
         String ans="";
-        ArrayList<String > toRemove=new ArrayList<String>();
+        //ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("coaches");
-            MongoCursor<Document> cursor = collection.find().iterator();
-            while (cursor.hasNext()) {
-                Document coach = cursor.next();
-                String nominateBy = coach.getString("EmployedBy");
-                if (nominateBy.equals(userName)) {
-                    ans = ans +", "+ coach.getString("UserName");
-                    toRemove.add(coach.getString("UserName"));
-
-                }
+//            MongoCursor<Document> cursor = collection.find().iterator();
+//            while (cursor.hasNext()) {
+//                Document coach = cursor.next();
+//                String nominateBy = coach.getString("EmployedBy");
+//                if (nominateBy.equals(userName)) {
+//                    ans = ans +", "+ coach.getString("UserName");
+//                    toRemove.add(coach.getString("UserName"));
+//
+//                }
                 collection.updateMany(
-                        Filters.eq("EmployedBy", userName),
+                        Filters.eq("UserName", userName),
                         Updates.combine(
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-            }
-            for(int i=0; i<toRemove.size();i++){
-                resetAllCoachesNominated(toRemove.get(i));
-            }
+            removeAllLastNominates(allRelated,userName);
+//            }
+//            for(int i=0; i<toRemove.size();i++){
+//                resetAllCoachesNominated(toRemove.get(i));
+//            }
         } catch (MongoException e) {
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");
@@ -2601,34 +2610,35 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             throw new MongoException("Failed to connect the DB!");
         }
-        return ans;
+        return userName;
     }
 
-    private String resetAllPlayerNominated(String userName) {
+    private String resetAllPlayerNominated(HashMap<String,String> allRelated,String userName) {
         String ans="";
-        ArrayList<String > toRemove=new ArrayList<String>();
+        //ArrayList<String > toRemove=new ArrayList<String>();
         try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
             MongoDatabase database = mongoClient.getDatabase("footballdb");
             MongoCollection<Document> collection = database.getCollection("players");
-            MongoCursor<Document> cursor = collection.find().iterator();
-            while (cursor.hasNext()) {
-                Document player = cursor.next();
-                String nominateBy = player.getString("EmployedBy");
-                if (nominateBy.equals(userName)) {
-                    ans = ans +", "+ player.getString("UserName");
-                    toRemove.add(player.getString("UserName"));
-
-                }
+//            MongoCursor<Document> cursor = collection.find().iterator();
+//            while (cursor.hasNext()) {
+//                Document player = cursor.next();
+//                String nominateBy = player.getString("EmployedBy");
+//                if (nominateBy.equals(userName)) {
+//                    ans = ans +", "+ player.getString("UserName");
+//                    toRemove.add(player.getString("UserName"));
+//
+//                }
                 collection.updateMany(
-                        Filters.eq("EmployedBy", userName),
+                        Filters.eq("UserName", userName),
                         Updates.combine(
                                 Updates.set("CurrentTeam", ""),
                                 Updates.set("EmployedBy", "")
                         ));
-            }
-            for(int i=0; i<toRemove.size();i++){
-                resetAllPlayerNominated(toRemove.get(i));
-            }
+                removeAllLastNominates(allRelated,userName);
+//            }
+//            for(int i=0; i<toRemove.size();i++){
+//                resetAllPlayerNominated(toRemove.get(i));
+//            }
         } catch (MongoException e) {
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");
@@ -2637,7 +2647,7 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             throw new MongoException("Failed to connect the DB!");
         }
-        return ans;
+        return userName;
     }
 
     //    private Document getBudgetForCurrentSeason(){

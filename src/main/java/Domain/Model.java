@@ -38,7 +38,6 @@ public class Model extends Observable {
 //    private SystemManager sys;
 //    private Fan fan;
 //
-    HashMap<String,String> listRelated=new HashMap();
 
     private int currentSeasonYear;
 
@@ -671,7 +670,6 @@ public class Model extends Observable {
                     db.updateUserDetails(newOwner, teamMember.getTeam().getTeamName(), "owners", "CurrentTeam");
                     db.updateUserDetails(newOwner, teamMember.getUserName(), "owners", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added Successful";
-                    listRelated.put(username,userExists.getUserName());
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added isn't Successful";
@@ -693,7 +691,6 @@ public class Model extends Observable {
                     db.updateUserDetails(newCoach, teamMember.getTeam().getTeamName(), "coaches", "CurrentTeam");
                     db.updateUserDetails(newCoach, teamMember.getUserName(), "coaches", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added Successful";
-                    listRelated.put(userName,userExists.getUserName());
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added isn't Successful";
@@ -715,7 +712,6 @@ public class Model extends Observable {
                     db.updateUserDetails(newPlayer, teamMember.getTeam().getTeamName(), "players", "CurrentTeam");
                     db.updateUserDetails(newPlayer, teamMember.getUserName(), "players", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Player added Successful";
-                    listRelated.put(userName,player.getUserName());
                 }
                 else{
                     ans=teamMember.getTeam().getTeamName()+":"+"Player added isn't Successful";
@@ -741,7 +737,6 @@ public class Model extends Observable {
                     db.updateUserDetails(user, Boolean.parseBoolean(teamMP), "teamManagers", "TeamManagerPermission");
                     db.updateUserDetails(user, Boolean.parseBoolean(ownerP), "teamManagers", "OwnerPermission");
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added Successful";
-                    listRelated.put(userName,teamManager.getUserName());
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added isn't Successful";
@@ -984,10 +979,10 @@ public class Model extends Observable {
                 if (((TeamMember) teamMember.getTeam().getTeamOwners().get(i)).getUserName().equals(nameAsset)) {
                     TeamMember owner = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveOwner(owner)) {
-                        String removeduser= db.removeAllLastNominates(listRelated,nameAsset);
+                        String removeduser= db.removeAllLastNominates(nameAsset);
                         db.updateUserDetails(nameAsset, "", "owners", "CurrentTeam");
                         db.updateUserDetails(nameAsset, "", "owners", "EmployedBy");
-                        //ans = teamMember.getTeam().getTeamName() + ":" + "Remove Successful";
+                        ans = teamMember.getTeam().getTeamName() + ":" + "Remove Successful";
                         if(removeduser.equals("")){
                             ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
                         }
@@ -1008,8 +1003,6 @@ public class Model extends Observable {
                         db.updateUserDetails(nameAsset, "", "players", "CurrentTeam");
                         db.updateUserDetails(nameAsset, "", "players", "EmployedBy");
                         ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
-                        db.getAll();
-                        //db.getAllEmplyedPlayers();
                     }
                 }
             }
@@ -1017,7 +1010,7 @@ public class Model extends Observable {
                 if (((TeamMember) teamMember.getTeam().getTeamManagers().get(i)).getUserName().equals(nameAsset)) {
                     TeamMember teamManager = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveTeamManager(teamManager)) {
-                        String removeduser= db.removeAllLastNominates(listRelated,nameAsset);
+                        String removeduser= db.removeAllLastNominates(nameAsset);
                         db.updateUserDetails(nameAsset, "", "teamManagers", "CurrentTeam");
                         db.updateUserDetails(nameAsset, "", "teamManagers", "EmployedBy");
                         db.updateUserDetails(nameAsset, false, "teamManagers", "CoachPermission");

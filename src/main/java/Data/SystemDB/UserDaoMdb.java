@@ -2892,22 +2892,28 @@ public class UserDaoMdb implements DataBaseInterface {
     }
 
     public HashMap<String,String> getAll(){
-//        HashMap<String,String> usersEmployed1 = new HashMap<String,String>();
-//        HashMap<String,String> usersEmployed2 = new HashMap<String,String>();
-//        HashMap<String,String> usersEmployed3 = new HashMap<String,String>();
-//        HashMap<String,String> usersEmployed4 = new HashMap<String,String>();
-//        usersEmployed1.putAll(getAllEmplyedPlayers());
-//        usersEmployed2.putAll(getAllEmplyedCoachs());
-//        usersEmployed3.putAll(getAllEmplyedOwners());
-//        usersEmployed4.putAll(getAllEmplyedTeamMangers());
-//        for(int i=0; i<usersEmployed1.size();i++){
-//        }
-        HashMap<String,String> AllUsers = new HashMap<String,String>();
-        AllUsers.putAll(getAllEmplyedTeamMangers());
-        AllUsers.putAll(getAllEmplyedOwners());
-        AllUsers.putAll(getAllEmplyedPlayers());
-        AllUsers.putAll(getAllEmplyedCoachs());
-        return AllUsers;
+        HashMap<String,String> usersEmployed1 = new HashMap<String,String>();
+        HashMap<String,String> usersEmployed2 = new HashMap<String,String>();
+        HashMap<String,String> usersEmployed3 = new HashMap<String,String>();
+        HashMap<String,String> usersEmployed4 = new HashMap<String,String>();
+        HashMap<String,String> allUsers = new HashMap<String,String>();
+        usersEmployed1.putAll(getAllEmplyedPlayers());
+        usersEmployed2.putAll(getAllEmplyedCoachs());
+        usersEmployed3.putAll(getAllEmplyedOwners());
+        usersEmployed4.putAll(getAllEmplyedTeamMangers());
+        for (String term:usersEmployed1.keySet()) {
+            allUsers.put(term,usersEmployed1.get(term));
+        }
+        for (String term:usersEmployed2.keySet()) {
+            allUsers.put(term,usersEmployed2.get(term));
+        }
+        for (String term:usersEmployed3.keySet()) {
+            allUsers.put(term,usersEmployed3.get(term));
+        }
+        for (String term:usersEmployed4.keySet()) {
+            allUsers.put(term,usersEmployed4.get(term));
+        }
+        return allUsers;
     }
 
     public HashMap<String,String> getAllEmplyedPlayers(){

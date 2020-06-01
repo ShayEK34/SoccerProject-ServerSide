@@ -42,6 +42,7 @@ public class ClientHandler implements Runnable {
                     } else if (splittedstr[0].equals("changeTeamStatus")) {
                         reply = model.changeTeamStatus(splittedstr[1]);
                         out.println(reply);
+                        out.println("test Alert");
                         //System.out.println((((String)reply)));
                     } else if (splittedstr[0].equals("addTeam")) {
                         reply = model.addTeam(splittedstr[1], splittedstr[2], splittedstr[3], splittedstr[4], splittedstr[5], splittedstr[6]);
@@ -219,9 +220,6 @@ public class ClientHandler implements Runnable {
                         reply = model.addSubstituteEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
                         out.println(reply);
                     }
-
-
-
 
                 }else{
                     break;

@@ -3037,8 +3037,9 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
-                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    AvailablPlayer.put(nominateBy, new ArrayList<>());
+                    if (!AvailablPlayer.containsKey(nominateBy)) {
+                        AvailablPlayer.put(nominateBy, new ArrayList<>());
+                    }
                     AvailablPlayer.get(nominateBy).add(userName);
                 }
             }
@@ -3064,8 +3065,9 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
-                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    Availablcoach.put(nominateBy, new ArrayList<>());
+                    if(!Availablcoach.containsKey(nominateBy)){
+                        Availablcoach.put(nominateBy, new ArrayList<>());
+                    }
                     Availablcoach.get(nominateBy).add(userName);
                 }
             }
@@ -3091,8 +3093,9 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
-                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    Availablowner.put(nominateBy, new ArrayList<>());
+                    if(!Availablowner.containsKey(nominateBy)){
+                        Availablowner.put(nominateBy, new ArrayList<>());
+                    }
                     Availablowner.get(nominateBy).add(userName);
                 }
             }
@@ -3118,8 +3121,9 @@ public class UserDaoMdb implements DataBaseInterface {
                 String nominateBy = player.getString("EmployedBy");
                 if(!nominateBy.equals("")){
                     String userName = player.getString("UserName");
-                    //TeamMember teamplayer = (TeamMember)this.getUser(userName);
-                    AvailablteamMangers.put(nominateBy, new ArrayList<>());
+                    if(!AvailablteamMangers.containsKey(nominateBy)){
+                        AvailablteamMangers.put(nominateBy, new ArrayList<>());
+                    }
                     AvailablteamMangers.get(nominateBy).add(userName);
                 }
             }

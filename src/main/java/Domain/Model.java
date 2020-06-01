@@ -11,6 +11,9 @@ package Domain;
 
 import Data.SystemDB.UserDaoMdb;
 import Domain.AlertSystem.AlertPop;
+import Domain.AlertSystem.BudgetAlert;
+import Domain.AlertSystem.MatchAlert;
+import Domain.AlertSystem.TeamAlert;
 import Domain.ClubManagement.TeamInfo;
 import Domain.Systems.SystemErrorLogs;
 import Domain.Systems.SystemEventsLog;
@@ -1190,7 +1193,7 @@ public class Model extends Observable {
         ArrayList<String> alerts=new ArrayList<String>();
         ArrayList<AlertPop> a=db.getAllUserAlerts(username);
         for (AlertPop ap:a) {
-            if((ap.getType().equals("Budget")) || (ap.getType().equals("Match")) || (ap.getType().equals("Team"))){
+            if((ap instanceof BudgetAlert) || (ap instanceof MatchAlert) || (ap instanceof TeamAlert)){
                 alerts.add(ap.showAlert());
             }
         }

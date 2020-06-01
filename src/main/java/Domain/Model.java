@@ -208,6 +208,15 @@ public class Model extends Observable {
             if (l.addTeam(t)) {
                 db.addTeamToLeague(t.getTeamName(), currentSeasonYear, l.getLeagueName());
                 db.updateAlertDetails(username, selectedReq);
+                /**
+                 * ===========
+                 * ===ALERT===
+                 * ===========
+                 */
+                String content="The Team "+teamName+" added successfully to league "+leagueName;
+                ArrayList<String>add=alertSystem.getAllAddressee(t);
+                addAlertToDB(content,"Team",add);
+
                 return "team was added successfully";
             } else {
                 return "team isnt complete";
@@ -477,6 +486,16 @@ public class Model extends Observable {
             }
             else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)
                     && db.updateMatchResult(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, teamScored)) {
+                /**
+                 * ===========
+                 * ===ALERT===
+                 * ===========
+                 */
+                String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> Goal to "+teamScored;
+                ArrayList<String>add=alertSystem.getAllAddressee(game);
+                add.addAll(db.getAllAssignUsersToAlerts());
+                addAlertToDB(content,"Match",add);
+
                 return "true";
             }
         }
@@ -517,6 +536,16 @@ public class Model extends Observable {
                 return "game is over";
             }
             else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)) {
+                /**
+                 * ===========
+                 * ===ALERT===
+                 * ===========
+                 */
+                String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> "+eventType+" "+teamPlayerScored;
+                ArrayList<String>add=alertSystem.getAllAddressee(game);
+                add.addAll(db.getAllAssignUsersToAlerts());
+                addAlertToDB(content,"Match",add);
+
                 return "true";
             }
         }
@@ -558,6 +587,15 @@ public class Model extends Observable {
                 return "game is over";
             }
             else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerOut, playerIn, eventType)) {
+                /**
+                 * ===========
+                 * ===ALERT===
+                 * ===========
+                 */
+                String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> Substitute between " +playerOut+" and "+playerIn;
+                ArrayList<String>add=alertSystem.getAllAddressee(game);
+                add.addAll(db.getAllAssignUsersToAlerts());
+                addAlertToDB(content,"Match",add);
                 return "true";
             }
         }

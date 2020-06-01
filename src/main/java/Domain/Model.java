@@ -10,6 +10,7 @@ package Domain;
 //import Domain.User.*;
 
 import Data.SystemDB.UserDaoMdb;
+import Domain.AlertSystem.AlertPop;
 import Domain.ClubManagement.TeamInfo;
 import Domain.Systems.SystemErrorLogs;
 import Domain.Systems.SystemEventsLog;
@@ -1182,4 +1183,19 @@ public class Model extends Observable {
 //    public ArrayList<String> getRefReqs(String userName) {
 //        return db.getAllRefReqs(userName);
 //    }
+
+    public String getAlerts(String username){
+        String ans="";
+        ArrayList<String> alerts=new ArrayList<String>();
+        ArrayList<AlertPop> a=db.getAllUserAlerts(username);
+        for (AlertPop ap:a) {
+            if((ap.getType().equals("Budget")) || (ap.getType().equals("Match")) || (ap.getType().equals("Team"))){
+                alerts.add(ap.showAlert());
+            }
+        }
+        for (String n:alerts) {
+            ans=ans+":"+n;
+        }
+        return ans;
+    }
 }

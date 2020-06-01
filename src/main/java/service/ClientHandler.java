@@ -97,6 +97,10 @@ public class ClientHandler implements Runnable {
                     else if (splittedstr[0].equals("addTeamToLeagueRequest")) {
                         reply = model.addTeamToLeagueRequest(splittedstr[1], splittedstr[2]);
                         out.println(reply);
+                    } else if(splittedstr[0].equals("getAlerts"))
+                    {
+                        reply=model.getAlerts(splittedstr[1]);
+                        out.println(reply);
                     }
 
 //                else if(number.equals("3"))

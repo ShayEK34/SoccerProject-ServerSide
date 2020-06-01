@@ -8,7 +8,7 @@ public class BudgetAlert extends A_AlertPop {
 
     @Override
     public String showAlert() {
-        String str= "Budget: "+ super.showAlert();
+        String str= super.showAlert();
         return str;
     }
 }

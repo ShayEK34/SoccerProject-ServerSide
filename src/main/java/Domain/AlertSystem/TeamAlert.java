@@ -8,7 +8,7 @@ public class TeamAlert extends A_AlertPop {
 
     @Override
     public String showAlert() {
-        String str= "Team: "+ super.showAlert();
+        String str=super.showAlert();
         return str;
     }
 }

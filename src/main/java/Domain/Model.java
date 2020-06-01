@@ -979,16 +979,16 @@ public class Model extends Observable {
                 if (((TeamMember) teamMember.getTeam().getTeamOwners().get(i)).getUserName().equals(nameAsset)) {
                     TeamMember owner = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveOwner(owner)) {
-                        //String removeduser= db.removeAllLastNominates(listRelated,nameAsset);
-                        db.getAllEmplyedBy(nameAsset);
-                        db.updateUserDetails(nameAsset, "", "owners", "CurrentTeam");
-                        db.updateUserDetails(nameAsset, "", "owners", "EmployedBy");
+                        String removeduser=  db.getAllEmplyedBy(nameAsset);
+
+//                        db.updateUserDetails(nameAsset, "", "owners", "CurrentTeam");
+//                        db.updateUserDetails(nameAsset, "", "owners", "EmployedBy");
                         //ans = teamMember.getTeam().getTeamName() + ":" + "Remove Successful";
 //                        if(removeduser.equals("")){
 //                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
 //                        }
 //                        else{
-//                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
+                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
 //                        }
                     }
                     else {
@@ -1013,20 +1013,14 @@ public class Model extends Observable {
                 if (((TeamMember) teamMember.getTeam().getTeamManagers().get(i)).getUserName().equals(nameAsset)) {
                     TeamMember teamManager = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveTeamManager(teamManager)) {
-                        //String removeduser= db.removeAllLastNominates(listRelated,nameAsset);
-                        db.getAllEmplyedBy(nameAsset);
-                        db.updateUserDetails(nameAsset, "", "teamManagers", "CurrentTeam");
-                        db.updateUserDetails(nameAsset, "", "teamManagers", "EmployedBy");
-                        db.updateUserDetails(nameAsset, false, "teamManagers", "CoachPermission");
-                        db.updateUserDetails(nameAsset, false, "teamManagers", "PlayerPermission");
-                        db.updateUserDetails(nameAsset, false, "teamManagers", "TeamManagerPermission");
-                        db.updateUserDetails(nameAsset, false, "teamManagers", "OwnerPermission");
-//                        if(removeduser.equals("")){
-//                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
-//                        }
-//                        else{
-//                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
-//                        }
+                        String removeduser= db.getAllEmplyedBy(nameAsset);
+//                        db.updateUserDetails(nameAsset, "", "teamManagers", "CurrentTeam");
+//                        db.updateUserDetails(nameAsset, "", "teamManagers", "EmployedBy");
+//                        db.updateUserDetails(nameAsset, false, "teamManagers", "CoachPermission");
+//                        db.updateUserDetails(nameAsset, false, "teamManagers", "PlayerPermission");
+//                        db.updateUserDetails(nameAsset, false, "teamManagers", "TeamManagerPermission");
+//                        db.updateUserDetails(nameAsset, false, "teamManagers", "OwnerPermission");
+                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
                     }
                 }
             }

@@ -10,10 +10,7 @@ package Domain;
 //import Domain.User.*;
 
 import Data.SystemDB.UserDaoMdb;
-import Domain.AlertSystem.AlertPop;
-import Domain.AlertSystem.BudgetAlert;
-import Domain.AlertSystem.MatchAlert;
-import Domain.AlertSystem.TeamAlert;
+import Domain.AlertSystem.*;
 import Domain.ClubManagement.TeamInfo;
 import Domain.Systems.SystemErrorLogs;
 import Domain.Systems.SystemEventsLog;
@@ -35,7 +32,7 @@ import java.util.Vector;
 public class Model extends Observable {
 
     private UserDaoMdb db;
-    //    private AlertSystem alertSystem;
+    private AlertSystem alertSystem;
 //    private TeamMember tm;
 //    private AssociationUser au;
 //    private Referee ref;
@@ -49,7 +46,7 @@ public class Model extends Observable {
     public Model() {
         db = UserDaoMdb.getInstance();
         currentSeasonYear = db.getTheCurrentSeason();
-//        alertSystem = AlertSystem.getInstance();
+        alertSystem = AlertSystem.getInstance();
     }
 //
 //    /**
@@ -638,10 +635,28 @@ public class Model extends Observable {
         TeamInfo tm=db.getTeam(teamName);
         if (tm.isTeamActiveStatus()) {
             db.updateTeamDetails(tm.getTeamName(), false, "teams", "TeamActiveStatus");
+            /**
+             * ===========
+             * ===ALERT===
+             * ===========
+             */
+            String content="The Team "+tm.getTeamName()+" closed.";
+            ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
+            addAlertToDB(content,"Team",add);
+
+
             //CloseTeam();
             return "false";
         } else {
             db.updateTeamDetails(tm.getTeamName(), true, "teams", "TeamActiveStatus");
+            /**
+             * ===========
+             * ===ALERT===
+             * ===========
+             */
+            String content="The Team "+tm.getTeamName()+" opened.";
+            ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
+            addAlertToDB(content,"Team",add);
             //OpenTeam();
             return "true";
         }
@@ -675,6 +690,14 @@ public class Model extends Observable {
                     db.updateUserDetails(newOwner, teamMember.getTeam().getTeamName(), "owners", "CurrentTeam");
                     db.updateUserDetails(newOwner, teamMember.getUserName(), "owners", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added Successful";
+                    /**
+                     * ===========
+                     * ===ALERT===
+                     * ===========
+                     */
+                    String content="The Owner "+newOwner+" join to "+teamMember.getTeam().getTeamName()+".";
+                    ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
+                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added isn't Successful";
@@ -696,6 +719,14 @@ public class Model extends Observable {
                     db.updateUserDetails(newCoach, teamMember.getTeam().getTeamName(), "coaches", "CurrentTeam");
                     db.updateUserDetails(newCoach, teamMember.getUserName(), "coaches", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added Successful";
+                    /**
+                     * ===========
+                     * ===ALERT===
+                     * ===========
+                     */
+                    String content="The Coach "+newCoach+" join to "+teamMember.getTeam().getTeamName()+".";
+                    ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
+                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added isn't Successful";
@@ -717,6 +748,15 @@ public class Model extends Observable {
                     db.updateUserDetails(newPlayer, teamMember.getTeam().getTeamName(), "players", "CurrentTeam");
                     db.updateUserDetails(newPlayer, teamMember.getUserName(), "players", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Player added Successful";
+                    /**
+                     * ===========
+                     * ===ALERT===
+                     * ===========
+                     */
+                    String content="The Player "+newPlayer+" join to "+teamMember.getTeam().getTeamName()+".";
+                    ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
+                    addAlertToDB(content,"Team",add);
+
                 }
                 else{
                     ans=teamMember.getTeam().getTeamName()+":"+"Player added isn't Successful";
@@ -742,6 +782,14 @@ public class Model extends Observable {
                     db.updateUserDetails(user, Boolean.parseBoolean(teamMP), "teamManagers", "TeamManagerPermission");
                     db.updateUserDetails(user, Boolean.parseBoolean(ownerP), "teamManagers", "OwnerPermission");
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added Successful";
+                    /**
+                     * ===========
+                     * ===ALERT===
+                     * ===========
+                     */
+                    String content="The Team Manager "+user+" join to "+teamMember.getTeam().getTeamName()+".";
+                    ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
+                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added isn't Successful";
@@ -1210,5 +1258,12 @@ public class Model extends Observable {
     public String Unsubscribe(String username){
         db.updateUserDetails(username,false,"users"," AssignToAlerts");
         return "true";
+    }
+
+    private void addAlertToDB(String content,String type, ArrayList<String> users){
+        for (String user:users) {
+            db.addUserAlert(user,type,content,false);
+        }
+
     }
 }

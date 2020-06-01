@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public class AlertSystem {
 
     private static AlertSystem alertSystem=null;
-    private UserDaoMdb DB;
+
 
     private AlertSystem() {
-        this.DB = UserDaoMdb.getInstance();
+
     }
 
     public static AlertSystem getInstance() {
@@ -26,123 +26,72 @@ public class AlertSystem {
     }
 
     /**
-     * save alert in database
      * =================================
-     * ALERT_CODE:
-     * *oct-open close team.
-     * *dtm- delete team member.
-     * *ctc- close team completely.
-     * *nr- nominate referee
+     * ALERT
+     * delete team.
      * =================================
-     * KEYWORD:
-     * *name of team
-     * *name of user
-     * =================================
+     * @param team
+     * @return
      */
-    public void sendAlert(String alertContent, String kewWord, String alertCode){
-        ArrayList<String> addressee=new ArrayList<String>();
-        if(alertCode.equals("oct")){
-            addressee=getManageTeamMembers(kewWord);
-            ArrayList<SystemManager> systemManagers=DB.getAllSystemManagers();
-            for (SystemManager sysM:systemManagers) {
-                if(!addressee.contains(sysM.getUserName())){
-                    addressee.add(sysM.getUserName());
-                }
-            }
-            for (String user: addressee) {
-                DB.addUserAlert(user,"TeamAlert",alertContent,false);
-            }
-        }
-        else if(alertCode.equals("dtm")){
-            addressee.add(kewWord);
-            for (String user: addressee) {
-                DB.addUserAlert(user,"TeamAlert",alertContent,false);
-            }
-        }
-        else if(alertCode.equals("ctc")) {
-            addressee=getManageTeamMembers(kewWord);
-            for (String user: addressee) {
-                DB.addUserAlert(user,"TeamAlert",alertContent,false);
-            }
-        }
-        else if(alertCode.equals("nr")){
-            addressee.add(kewWord);
-            for (String user: addressee) {
-                DB.addUserAlert(user,"NominateRefereeAlert",alertContent,false);
-            }
-        }
-
+    public ArrayList<String> getAllAddressee(TeamInfo team){
+        ArrayList<String> addressee=getManageTeamMembers(team);
+        return addressee;
     }
 
     /**
-     * save alert in database
      * =================================
-     * ALERT_CODE:
-     * *ms-match score.
-     * *b- budget.
-     * *ta- team approval
+     * ALERT
+     * open or close team.
      * =================================
-     *
+     * @param team
+     * @return
      */
-    public void sendAlert(String alertContent, String alertCode){
-        ArrayList<String> addressee=new ArrayList<String>();
-        if(alertCode.equals("b")){
-            ArrayList<AssociationUser> associationUsers=DB.getAllAssociationUsers();
-            for (AssociationUser assU:associationUsers) {
-                addressee.add(assU.getUserName());
-            }
-            for (String user: addressee) {
-                DB.addUserAlert(user,"BudgetAlert",alertContent,false);
+    public ArrayList<String> getAllAddressee(TeamInfo team, ArrayList<SystemManager> systemManagers){
+        ArrayList<String> addressee=getManageTeamMembers(team);
+        for (SystemManager sysM:systemManagers) {
+            if(!addressee.contains(sysM.getUserName())){
+                addressee.add(sysM.getUserName());
             }
         }
-        else if(alertCode.equals("ms")){
-            //add all users that subscribe to alert system.
-            addressee= DB.getAllAssignUsersToAlerts();
-            for (String user: addressee) {
-                DB.addUserAlert(user,"MatchAlert",alertContent,false);
-            }
-        }
-        else if(alertCode.equals("ta")){
-            ArrayList<AssociationUser> associationUsers=DB.getAllAssociationUsers();
-            for (AssociationUser assU:associationUsers) {
-                addressee.add(assU.getUserName());
-            }
-            for (String user: addressee) {
-                DB.addUserAlert(user,"TeamApprovalAlert",alertContent,false);
-            }
-        }
-
-
+        return addressee;
     }
 
     /**
-     *save alert in database.
-     * alerts about change location or time of match.
+     * =================================
+     * ALERT
+     * delete user from team.
+     * =================================
+     * @return
      */
-    public void sendAlert(String alertContent, Match match){
-        ArrayList<String> addressee=new ArrayList<String>();
-        //add all users that subscribe to alert system.
-        addressee=DB.getAllAssignUsersToAlerts();
-        if(!addressee.contains(match.getMainRef().getUserName())) {
-            addressee.add(match.getMainRef().getUserName());
+    public ArrayList<String> getAllAddressee(Fan user, ArrayList<String> users){
+        ArrayList<String> addressee=users;
+        if(!addressee.contains(user.getUserName())){
+            addressee.add(user.getUserName());
         }
-        for (Referee ref:match.getSideRefs()) {
-            if(!addressee.contains(ref.getUserName())){
-                addressee.add(ref.getUserName());
+        return addressee;
+    }
+
+    /**
+     * =================================
+     * ALERT
+     * about Match.
+     * =================================
+     * @return
+     */
+    public ArrayList<String> getAllAddressee(Match match){
+        ArrayList<String> addressee=new ArrayList<String>();
+        addressee.add(match.getMainRef().getUserName());
+        for (Referee referee:match.getSideRefs()) {
+            if(!addressee.contains(referee.getUserName())){
+                addressee.add(referee.getUserName());
             }
         }
-        for (String user: addressee) {
-            DB.addUserAlert(user,"MatchAlert",alertContent,false);
-        }
+        return addressee;
     }
 
-    public void Subscribe(String username){
-        DB.updateUserDetails(username,"true","users","AssignToAlerts");
-    }
 
-    public void Unsubscribe(String username){
-        DB.updateUserDetails(username,"false","users","AssignToAlerts");
-    }
+
+
 
 
 
@@ -151,34 +100,31 @@ public class AlertSystem {
 
     /**
      * for alerts about open and close team
-     * @param teamName
+     * @param team
      * @return
      */
-    private ArrayList<String> getManageTeamMembers(String teamName){
+    private ArrayList<String> getManageTeamMembers(TeamInfo team){
         ArrayList<String> ans=new ArrayList<String>();
 
-        ArrayList<String> allTeamManagers= DB.getTeamManagers(teamName);
-        for (String manager :allTeamManagers) {
-            if(!ans.contains(manager)){
-                ans.add(manager);
+        for (OwnerInterface tm:team.getTeamOwners()) {
+            if(!ans.contains(((TeamMember)tm).getUserName())){
+                ans.add(((TeamMember)tm).getUserName());
             }
         }
-        ArrayList<String> allTeamOwners = DB.getTeamOwners(teamName);
-        for (String owner :allTeamOwners) {
-            if(!ans.contains(owner)){
-                ans.add(owner);
+        for (TeamManagerInterface tm:team.getTeamManagers()) {
+            if(!ans.contains(((TeamMember)tm).getUserName())){
+                ans.add(((TeamMember)tm).getUserName());
             }
         }
         return ans;
     }
 
-    private ArrayList<String> mergeArray(ArrayList<String> arr1, ArrayList<String> arr2){
-        for (String user :arr1) {
-            if(!arr2.contains((user))){
-                arr2.add(user);
-            }
-        }
-        return arr2;
-    }
+//    private ArrayList<String> mergeArray(ArrayList<String> arr1, ArrayList<String> arr2){
+//        for (String user :arr1) {
+//            if(!arr2.contains((user))){
+//                arr2.add(user);
+//            }
+//        }
+//        return arr2;
+//    }
 }
-

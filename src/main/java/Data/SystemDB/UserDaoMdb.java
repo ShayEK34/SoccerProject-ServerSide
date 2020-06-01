@@ -2405,12 +2405,15 @@ public class UserDaoMdb implements DataBaseInterface {
                             if (alertType.equals("TeamAlert")) {
                                 TeamAlert alertTeam = new TeamAlert(alertContent);
                                 userAlerts.add(alertTeam);
+                                updateAlertDetails(userName,alertContent);//************
                             } else if (alertType.equals("MatchAlert")) {
                                 MatchAlert alertMatch = new MatchAlert(alertContent);
                                 userAlerts.add(alertMatch);
+                                updateAlertDetails(userName,alertContent);
                             } else if (alertType.equals("BudgetAlert")) {
                                 BudgetAlert alertBudget = new BudgetAlert(alertContent);
                                 userAlerts.add(alertBudget);
+                                updateAlertDetails(userName,alertContent);
                             }  else if(alertType.equals("TeamApprovalAlert")){
                                 TeamApprovalAlert teamApprovalAlert=new TeamApprovalAlert(alertContent);
                                 userAlerts.add(teamApprovalAlert);

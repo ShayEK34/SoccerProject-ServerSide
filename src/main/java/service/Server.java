@@ -51,7 +51,7 @@ public class Server {
                 accountingSystem.setConnect(true);
                 Socket client = listener.accept();
                 System.out.println("Server is connected to client!");
-                ClientHandler clientThread = new ClientHandler((client));
+                ClientHandler clientThread = new ClientHandler((client),clients);
                 clients.add(clientThread);
                 pool.execute(clientThread);
             } catch (SocketException e) {

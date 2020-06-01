@@ -1202,4 +1202,13 @@ public class Model extends Observable {
         }
         return ans;
     }
+
+    public String Subscribe(String username){
+        db.updateUserDetails(username,true,"users"," AssignToAlerts");
+        return "true";
+    }
+    public String Unsubscribe(String username){
+        db.updateUserDetails(username,false,"users"," AssignToAlerts");
+        return "true";
+    }
 }

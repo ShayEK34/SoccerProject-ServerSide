@@ -74,6 +74,7 @@ public class Model extends Observable {
         else{
             if(user.getPassword().equals(password)) {
                 if (user.getOccupation().equals("TeamMember")) {
+                    db.updateUserDetails(username,false,"users","AssignToAlerts");
                     res= "TeamMember";
                     if(((TeamMember)user).isCoach())
                         res=res+":"+"true";

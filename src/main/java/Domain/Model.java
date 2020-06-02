@@ -193,7 +193,7 @@ public String logout(String username){
         ArrayList<String> add = new ArrayList<String>();
         add.add(refUsername);
         String addressee = transferArrayToString(add);
-//                addAlertToDB(content,"Match",add);
+            addAlertToDB(content,"Match",add);
 
         return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
     }
@@ -236,7 +236,7 @@ public String logout(String username){
                 String content="The Team "+teamName+" added successfully to league "+leagueName;
                 ArrayList<String>add=alertSystem.getAllAddressee(t);
                 String addressee = transferArrayToString(add);
-//                addAlertToDB(content,"Team",add);
+                addAlertToDB(content,"Team",add);
 
                 return "team was added successfully"+ ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
             } else {
@@ -333,7 +333,7 @@ public String logout(String username){
             ArrayList<String> add = new ArrayList<String>();
             add.add(selectedRef);
             String addressee = transferArrayToString(add);
-//                addAlertToDB(content,"Match",add);
+                addAlertToDB(content,"Match",add);
 
             return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
         } else {
@@ -527,7 +527,7 @@ public String logout(String username){
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
                 String addressee=transferArrayToString(add);
-//                addAlertToDB(content,"Match",add);
+                addAlertToDB(content,"Match",add);
 
                 return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
@@ -578,7 +578,7 @@ public String logout(String username){
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
                 String addressee=transferArrayToString(add);
-//                addAlertToDB(content,"Match",add);
+               addAlertToDB(content,"Match",add);
 
                 return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
@@ -630,7 +630,7 @@ public String logout(String username){
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
                 String addressee=transferArrayToString(add);
-//                addAlertToDB(content,"Match",add);
+               addAlertToDB(content,"Match",add);
 
                 return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
@@ -717,7 +717,7 @@ public String logout(String username){
             String content="The Team "+tm.getTeamName()+" closed.";
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
             String addressee=transferArrayToString(add);
-//            addAlertToDB(content,"Team",add);
+            addAlertToDB(content,"Team",add);
 
 
             //CloseTeam();
@@ -732,7 +732,7 @@ public String logout(String username){
             String content="The Team "+tm.getTeamName()+" opened.";
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
             String addressee=transferArrayToString(add);
-//            addAlertToDB(content,"Team",add);
+            addAlertToDB(content,"Team",add);
             //OpenTeam();
             return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
         }
@@ -776,7 +776,7 @@ public String logout(String username){
                     add.add(newOwner);
                     String addressee = transferArrayToString(add);
                     ans = ans + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
-//                    addAlertToDB(content,"Team",add);
+                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added isn't Successful";
@@ -808,7 +808,7 @@ public String logout(String username){
                     add.add(newCoach);
                     String addressee=transferArrayToString(add);
                     ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
-//                    addAlertToDB(content,"Team",add);
+                   addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added isn't Successful";
@@ -840,7 +840,7 @@ public String logout(String username){
                     add.add(newPlayer);
                     String addressee=transferArrayToString(add);
                     ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
-//                    addAlertToDB(content,"Team",add);
+                    addAlertToDB(content,"Team",add);
 
                 }
                 else{
@@ -877,6 +877,7 @@ public String logout(String username){
                     add.add(user);
                     String addressee = transferArrayToString(add);
                     ans = ans + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
+                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added isn't Successful";
@@ -1349,7 +1350,9 @@ public String logout(String username){
 
     private void addAlertToDB(String content,String type, ArrayList<String> users){
         for (String user:users) {
-            db.addUserAlert(user,type,content,false);
+            if(!allLoginUser.contains(user)) {
+                db.addUserAlert(user, type, content, false);
+            }
         }
 
     }

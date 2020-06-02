@@ -118,7 +118,12 @@ public class Model extends Observable {
         }
     }
 
-
+public String logout(String username){
+        if(allLoginUser.contains(username)) {
+            allLoginUser.remove(username);
+        }
+        return "true";
+}
     public String checkEventLogs(String username, String event){
         SystemEventsLog sysEvents=new SystemEventsLog();
         try {

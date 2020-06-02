@@ -2411,12 +2411,15 @@ public class UserDaoMdb implements DataBaseInterface {
                             if (alertType.equals("TeamAlert")) {
                                 TeamAlert alertTeam = new TeamAlert(alertContent);
                                 userAlerts.add(alertTeam);
+                                updateAlertDetails(userName,alertContent);//************
                             } else if (alertType.equals("MatchAlert")) {
                                 MatchAlert alertMatch = new MatchAlert(alertContent);
                                 userAlerts.add(alertMatch);
+                                updateAlertDetails(userName,alertContent);
                             } else if (alertType.equals("BudgetAlert")) {
                                 BudgetAlert alertBudget = new BudgetAlert(alertContent);
                                 userAlerts.add(alertBudget);
+                                updateAlertDetails(userName,alertContent);
                             }  else if(alertType.equals("TeamApprovalAlert")){
                                 TeamApprovalAlert teamApprovalAlert=new TeamApprovalAlert(alertContent);
                                 userAlerts.add(teamApprovalAlert);
@@ -2995,6 +2998,58 @@ public class UserDaoMdb implements DataBaseInterface {
             }
             return AvailablteamMangers;
         }catch (MongoException e){
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public void Subscribe(String username){
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("users");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while (cursor.hasNext()) {
+                Document player = cursor.next();
+                String user = player.getString("UserName");
+                if (user.equals(username)) {
+                    collection.updateMany(
+                            Filters.eq("UserName", username),
+                            Updates.combine(
+                                    Updates.set("AssignToAlerts", true)
+                            ));
+                }
+            }
+        } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public void Unsubscribe(String username){
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("users");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while (cursor.hasNext()) {
+                Document player = cursor.next();
+                String user = player.getString("UserName");
+                if (user.equals(username)) {
+                    collection.updateMany(
+                            Filters.eq("UserName", username),
+                            Updates.combine(
+                                    Updates.set("AssignToAlerts", false)
+                            ));
+                }
+            }
+        } catch (MongoException e) {
             try {
                 syserror.addErrorLog("Server","Connection with db Lost");
             } catch (Exception ex) {

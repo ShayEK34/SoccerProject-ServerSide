@@ -9,7 +9,7 @@ public class MatchAlert  extends A_AlertPop{
 
     @Override
     public String showAlert() {
-        String str= "Match: "+ super.showAlert();
+        String str= super.showAlert();
         return str;
     }
 }

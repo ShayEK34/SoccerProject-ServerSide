@@ -412,8 +412,18 @@ public String logout(String username){
         return "League doesn't exist!";
     }
 
-    public ArrayList<String> getRefReqs(String userName) {
-        return db.getAllRefReqs(userName);
+    public String getRefReqs(String userName) {
+        StringBuilder ans = new StringBuilder();
+        ArrayList<String>  reqs =  db.getAllRefReqs(userName);
+        for (int i = 0; i < reqs.size(); i++) {
+            if (i == reqs.size() - 1)
+                ans.append(reqs.get(i));
+            else
+                ans.append(reqs.get(i)).append(":");
+        }
+
+        return ans.toString();
+
     }
 
     public String getAllRefereeMatches(String usernameRef) {
@@ -463,23 +473,6 @@ public String logout(String username){
         }
 
         return allPlayers.toString();
-    }
-
-    public int getMinuteInMatch(Date beginMatch) {
-        Date now = new Date();
-
-        if( beginMatch.getDate()==now.getDate() && beginMatch.getYear()==now.getYear() &&
-                beginMatch.getMonth()==now.getMonth() && beginMatch.getDay()==now.getDay()){
-            long diff = now.getTime() - beginMatch.getTime();
-            int diffMinutes = 0;
-            int diffHours = 0;
-            diffMinutes = (int) (diff / (60 * 1000) % 60);
-            diffHours = (int) (diff / (60 * 60 * 1000) % 24);
-
-            return diffMinutes + diffHours * 60;
-        }
-
-        return -10;
     }
 
     public String addGoalEvent(String homeTeamName, String awayTeamName, String mainRefUser,

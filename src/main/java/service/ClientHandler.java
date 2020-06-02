@@ -149,13 +149,7 @@ public class ClientHandler implements Runnable {
 
                     //referee
                     else if (splittedstr[0].equals("getRefReqs")) {
-                        String request = "";
                         reply = model.getRefReqs(splittedstr[1]);
-                        ArrayList<String> requests = (ArrayList<String>) reply;
-                        for (int i = 0; i < requests.size(); i++) {
-                            String currentRequest = requests.get(i);
-                            request = request + ":" + currentRequest;
-                        }
                         out.println(reply);
                     } else if (splittedstr[0].equals("refApprovesToJudge")) {
                         String request = "";

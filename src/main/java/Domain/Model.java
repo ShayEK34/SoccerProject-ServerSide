@@ -687,7 +687,7 @@ public class Model extends Observable {
 
 
             //CloseTeam();
-            return "false"+",,"+content;
+            return "false"+",,,"+"ALERT"+",,"+content;
         } else {
             db.updateTeamDetails(tm.getTeamName(), true, "teams", "TeamActiveStatus");
             /**
@@ -699,7 +699,7 @@ public class Model extends Observable {
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
             addAlertToDB(content,"Team",add);
             //OpenTeam();
-            return "true"+",,"+content;
+            return "true"+",,,"+"ALERT"+",,"+content;
         }
     }
 

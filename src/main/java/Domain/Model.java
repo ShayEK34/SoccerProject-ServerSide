@@ -798,7 +798,11 @@ public class Model extends Observable {
                      */
                     String content="The Player "+newPlayer+" join to "+teamMember.getTeam().getTeamName()+".";
                     ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
-                    addAlertToDB(content,"Team",add);
+                    String addressee=transferArrayToString(add);
+
+                    //CloseTeam();
+                    ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
+//                    addAlertToDB(content,"Team",add);
 
                 }
                 else{

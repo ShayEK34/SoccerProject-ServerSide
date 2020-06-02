@@ -178,8 +178,20 @@ public class Model extends Observable {
     }
 
     public String inviteRefereeToJudge(String assoUser, String refUsername) {
-        if (db.addUserAlert(refUsername, "NominateReferee", assoUser + " invited you to be a referee in " + currentSeasonYear + " season", false))
-            return "true";
+        if (db.addUserAlert(refUsername, "NominateReferee", assoUser + " invited you to be a referee in " + currentSeasonYear + " season", false)){
+        /**
+         * ===========
+         * ===ALERT===
+         * ===========
+         */
+        String content = "You have invitation to Judge from  " + assoUser;
+        ArrayList<String> add = new ArrayList<String>();
+        add.add(refUsername);
+        String addressee = transferArrayToString(add);
+//                addAlertToDB(content,"Match",add);
+
+        return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
+    }
         else
             return "false";
     }
@@ -307,7 +319,18 @@ public class Model extends Observable {
         int lastChar = selectedRef.indexOf("-");
         String refUserName = selectedRef.substring(0, lastChar).trim();
         if (db.updateUserDetails(refUserName, selectedLeague, "referees", "LeagueName")) {
-            return "true";
+            /**
+             * ===========
+             * ===ALERT===
+             * ===========
+             */
+            String content = "You add to league  " + selectedLeague;
+            ArrayList<String> add = new ArrayList<String>();
+            add.add(selectedRef);
+            String addressee = transferArrayToString(add);
+//                addAlertToDB(content,"Match",add);
+
+            return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
         } else {
             return "false";
         }

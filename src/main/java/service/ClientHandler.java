@@ -178,7 +178,14 @@ public class ClientHandler implements Runnable {
                         String assoUser = splittedstr[1];
                         String refUser = splittedstr[2];
                         reply = model.inviteRefereeToJudge(assoUser, refUser);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     } else if (splittedstr[0].equals("getTeamReqs")) {
                         String assoUser = splittedstr[1];
                         reply = model.getTeamReqs(assoUser);
@@ -211,7 +218,14 @@ public class ClientHandler implements Runnable {
                         out.println(reply);
                     } else if (splittedstr[0].equals("addRefToLeague")) {
                         reply = model.addRefToLeague(splittedstr[1], splittedstr[2]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     } else if (splittedstr[0].equals("changePointsForLeague")) {
                         reply = model.changePointsForLeague(splittedstr[1], splittedstr[2], splittedstr[3], splittedstr[4]
                                 , splittedstr[5], splittedstr[6]);

@@ -769,7 +769,10 @@ public class Model extends Observable {
                      */
                     String content="The Coach "+newCoach+" join to "+teamMember.getTeam().getTeamName()+".";
                     ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
-                    addAlertToDB(content,"Team",add);
+                    add.add(newCoach);
+                    String addressee=transferArrayToString(add);
+                    ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
+//                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added isn't Successful";
@@ -800,8 +803,6 @@ public class Model extends Observable {
                     ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
                     add.add(newPlayer);
                     String addressee=transferArrayToString(add);
-
-                    //CloseTeam();
                     ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
 //                    addAlertToDB(content,"Team",add);
 

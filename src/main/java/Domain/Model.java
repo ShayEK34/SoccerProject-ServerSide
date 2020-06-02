@@ -33,7 +33,7 @@ public class Model extends Observable {
 
     private UserDaoMdb db;
     private AlertSystem alertSystem;
-    private ArrayList<String> allLoginUser;
+    private static ArrayList<String> allLoginUser=new ArrayList<String>();
 //    private TeamMember tm;
 //    private AssociationUser au;
 //    private Referee ref;
@@ -48,7 +48,6 @@ public class Model extends Observable {
         db = UserDaoMdb.getInstance();
         currentSeasonYear = db.getTheCurrentSeason();
         alertSystem = AlertSystem.getInstance();
-        allLoginUser=new ArrayList<String>();
     }
 //
 //    /**

@@ -683,11 +683,12 @@ public class Model extends Observable {
              */
             String content="The Team "+tm.getTeamName()+" closed.";
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
-            addAlertToDB(content,"Team",add);
+            String addressee=transferArrayToString(add);
+//            addAlertToDB(content,"Team",add);
 
 
             //CloseTeam();
-            return "false"+",,,"+"ALERT"+",,"+content;
+            return "false"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
         } else {
             db.updateTeamDetails(tm.getTeamName(), true, "teams", "TeamActiveStatus");
             /**
@@ -697,9 +698,10 @@ public class Model extends Observable {
              */
             String content="The Team "+tm.getTeamName()+" opened.";
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
-            addAlertToDB(content,"Team",add);
+            String addressee=transferArrayToString(add);
+//            addAlertToDB(content,"Team",add);
             //OpenTeam();
-            return "true"+",,,"+"ALERT"+",,"+content;
+            return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
         }
     }
 
@@ -1306,5 +1308,18 @@ public class Model extends Observable {
             db.addUserAlert(user,type,content,false);
         }
 
+    }
+
+    private String transferArrayToString(ArrayList<String> arr){
+        String str="";
+        for(int i=0;i<arr.size();i++){
+            if(i==0){
+                str=arr.get(i);
+            }
+            else {
+                str=str+",,"+arr.get(i);
+            }
+        }
+        return str;
     }
 }

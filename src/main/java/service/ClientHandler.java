@@ -126,7 +126,14 @@ public class ClientHandler implements Runnable {
                         out.println(reply);
                     } else if (splittedstr[0].equals("removeAsset")) {
                         reply = model.removeAsset(splittedstr[1], splittedstr[2]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if (splittedstr[0].equals("addTeamToLeagueRequest")) {
                         reply = model.addTeamToLeagueRequest(splittedstr[1], splittedstr[2]);

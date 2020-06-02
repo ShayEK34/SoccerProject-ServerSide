@@ -117,12 +117,12 @@ public class Model extends Observable {
         }
     }
 
-public String logout(String username){
+    public String logout(String username){
         if(allLoginUser.contains(username)) {
             allLoginUser.remove(username);
         }
         return "true";
-}
+    }
     public String checkEventLogs(String username, String event){
         SystemEventsLog sysEvents=new SystemEventsLog();
         try {
@@ -183,19 +183,19 @@ public String logout(String username){
 
     public String inviteRefereeToJudge(String assoUser, String refUsername) {
         if (db.addUserAlert(refUsername, "NominateReferee", assoUser + " invited you to be a referee in " + currentSeasonYear + " season", false)){
-        /**
-         * ===========
-         * ===ALERT===
-         * ===========
-         */
-        String content = "You have invitation to Judge from  " + assoUser;
-        ArrayList<String> add = new ArrayList<String>();
-        add.add(refUsername);
-        String addressee = transferArrayToString(add);
+            /**
+             * ===========
+             * ===ALERT===
+             * ===========
+             */
+            String content = "You have invitation to Judge from  " + assoUser;
+            ArrayList<String> add = new ArrayList<String>();
+            add.add(refUsername);
+            String addressee = transferArrayToString(add);
             addAlertToDB(content,"MatchAlert",add);
 
-        return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
-    }
+            return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
+        }
         else
             return "false";
     }
@@ -332,7 +332,7 @@ public String logout(String username){
             ArrayList<String> add = new ArrayList<String>();
             add.add(refUserName);
             String addressee = transferArrayToString(add);
-                addAlertToDB(content,"MatchAlert",add);
+            addAlertToDB(content,"MatchAlert",add);
 
             return "true" + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
         } else {
@@ -577,7 +577,7 @@ public String logout(String username){
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
                 String addressee=transferArrayToString(add);
-               addAlertToDB(content,"MatchAlert",add);
+                addAlertToDB(content,"MatchAlert",add);
 
                 return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
@@ -629,7 +629,7 @@ public String logout(String username){
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
                 String addressee=transferArrayToString(add);
-               addAlertToDB(content,"MatchAlert",add);
+                addAlertToDB(content,"MatchAlert",add);
 
                 return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
@@ -807,7 +807,7 @@ public String logout(String username){
                     add.add(newCoach);
                     String addressee=transferArrayToString(add);
                     ans=ans+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
-                   addAlertToDB(content,"TeamAlert",add);
+                    addAlertToDB(content,"TeamAlert",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Coach added isn't Successful";
@@ -1120,6 +1120,19 @@ public String logout(String username){
                     TeamMember owner = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveOwner(owner)) {
                         String removeduser=  db.getAllEmplyedBy(nameAsset);
+                        /**
+                         * ===========
+                         * ===ALERT===
+                         * ===========
+                         */
+                        String content = "The Assets " + removeduser+" removed from "+teamMember.getTeam().getTeamName();
+                        ArrayList<String> add = alertSystem.getAllAddressee(teamMember.getTeam());
+                        String[] s=removeduser.split(",");
+                        for (String u:s) {
+                            add.add(u);
+                        }
+                        String addressee = transferArrayToString(add);
+                        addAlertToDB(content,"TeamAlert",add);
 
 //                        db.updateUserDetails(nameAsset, "", "owners", "CurrentTeam");
 //                        db.updateUserDetails(nameAsset, "", "owners", "EmployedBy");
@@ -1128,7 +1141,7 @@ public String logout(String username){
 //                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
 //                        }
 //                        else{
-                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
+                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser+ ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
 //                        }
                     }
                     else {

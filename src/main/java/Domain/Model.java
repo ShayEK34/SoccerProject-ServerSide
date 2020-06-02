@@ -1340,11 +1340,11 @@ public String logout(String username){
     }
 
     public String Subscribe(String username){
-        db.updateUserDetails(username,true,"users"," AssignToAlerts");
+        db.Subscribe(username);
         return "true";
     }
     public String Unsubscribe(String username){
-        db.updateUserDetails(username,false,"users"," AssignToAlerts");
+        db.Unsubscribe(username);
         return "true";
     }
 

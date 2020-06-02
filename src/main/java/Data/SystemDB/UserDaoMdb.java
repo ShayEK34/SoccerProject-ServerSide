@@ -2979,6 +2979,58 @@ public class UserDaoMdb implements DataBaseInterface {
         }
     }
 
+    public void Subscribe(String username){
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("users");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while (cursor.hasNext()) {
+                Document player = cursor.next();
+                String user = player.getString("UserName");
+                if (user.equals(username)) {
+                    collection.updateMany(
+                            Filters.eq("UserName", username),
+                            Updates.combine(
+                                    Updates.set("AssignToAlerts", true)
+                            ));
+                }
+            }
+        } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
+    public void Unsubscribe(String username){
+        try (MongoClient mongoClient = MongoClients.create(mongoClientURI)) {
+            MongoDatabase database = mongoClient.getDatabase("footballdb");
+            MongoCollection<Document> collection = database.getCollection("users");
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while (cursor.hasNext()) {
+                Document player = cursor.next();
+                String user = player.getString("UserName");
+                if (user.equals(username)) {
+                    collection.updateMany(
+                            Filters.eq("UserName", username),
+                            Updates.combine(
+                                    Updates.set("AssignToAlerts", false)
+                            ));
+                }
+            }
+        } catch (MongoException e) {
+            try {
+                syserror.addErrorLog("Server","Connection with db Lost");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw new MongoException("Failed to connect the DB!");
+        }
+    }
+
 }//end class
 
 

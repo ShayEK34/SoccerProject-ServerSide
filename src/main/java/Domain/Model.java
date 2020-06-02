@@ -331,7 +331,7 @@ public String logout(String username){
              */
             String content = "You add to league  " + selectedLeague;
             ArrayList<String> add = new ArrayList<String>();
-            add.add(selectedRef);
+            add.add(refUserName);
             String addressee = transferArrayToString(add);
                 addAlertToDB(content,"Match",add);
 

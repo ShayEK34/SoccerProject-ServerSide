@@ -101,10 +101,24 @@ public class ClientHandler implements Runnable {
                         }
                     } else if (splittedstr[0].equals("addOwnerToTeam")) {
                         reply = model.addOwnerToTeam(splittedstr[1], splittedstr[2]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     } else if (splittedstr[0].equals("addManagerToTeam")) {
                         reply = model.addManagerToTeam(splittedstr[1], splittedstr[2], splittedstr[3], splittedstr[4], splittedstr[5], splittedstr[6]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     } else if (splittedstr[0].equals("getTeamAssets")) {
                         reply = model.getTeamAssets(splittedstr[1]);
                         out.println(reply);
@@ -171,7 +185,14 @@ public class ClientHandler implements Runnable {
                         out.println(reply);
                     } else if (splittedstr[0].equals("checkTeamRegistration")) {
                         reply = model.checkTeamRegistration(splittedstr[1],splittedstr[2]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     } else if (splittedstr[0].equals("addLeagueToDB")) {
                         reply = model.addLeagueToDB(splittedstr[1], splittedstr[2], splittedstr[3], splittedstr[4], splittedstr[5],
                                 splittedstr[6], splittedstr[7], splittedstr[8], splittedstr[9]);
@@ -211,31 +232,80 @@ public class ClientHandler implements Runnable {
                     }
                     else if( splittedstr[0].equals("addGoalEvent") ){
                         reply = model.addGoalEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if( splittedstr[0].equals("addOffsideEvent") ){
                         reply = model.addOffsideFoulYellowRedInjuryEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if( splittedstr[0].equals("addFoulEvent") ){
                         reply = model.addOffsideFoulYellowRedInjuryEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if( splittedstr[0].equals("addYellowEvent") ){
                         reply = model.addOffsideFoulYellowRedInjuryEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if( splittedstr[0].equals("addRedEvent") ){
                         reply = model.addOffsideFoulYellowRedInjuryEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if( splittedstr[0].equals("addInjuryEvent") ){
                         reply = model.addOffsideFoulYellowRedInjuryEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
                     else if(splittedstr[0].equals("addSubstituteEvent")){
                         reply = model.addSubstituteEvent(splittedstr[1],splittedstr[2],splittedstr[3],splittedstr[4],splittedstr[5]);
-                        out.println(reply);
+                        if(((String)reply).contains("ALERT")){
+                            String []split=((String)reply).split(",,,,");
+                            out.println(split[0]);
+                            sendAllClients(split[1]);
+                        }
+                        else {
+                            out.println(reply);
+                        }
                     }
 
                 }else{

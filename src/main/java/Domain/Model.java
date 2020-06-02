@@ -218,9 +218,10 @@ public class Model extends Observable {
                  */
                 String content="The Team "+teamName+" added successfully to league "+leagueName;
                 ArrayList<String>add=alertSystem.getAllAddressee(t);
-                addAlertToDB(content,"Team",add);
+                String addressee = transferArrayToString(add);
+//                addAlertToDB(content,"Team",add);
 
-                return "team was added successfully";
+                return "team was added successfully"+ ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
             } else {
                 return "team isnt complete";
             }
@@ -497,9 +498,10 @@ public class Model extends Observable {
                 String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> Goal to "+teamScored;
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
-                addAlertToDB(content,"Match",add);
+                String addressee=transferArrayToString(add);
+//                addAlertToDB(content,"Match",add);
 
-                return "true";
+                return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
         }
 
@@ -547,9 +549,10 @@ public class Model extends Observable {
                 String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> "+eventType+" "+teamPlayerScored;
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
-                addAlertToDB(content,"Match",add);
+                String addressee=transferArrayToString(add);
+//                addAlertToDB(content,"Match",add);
 
-                return "true";
+                return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
         }
 
@@ -598,8 +601,10 @@ public class Model extends Observable {
                 String content="In a match between" +homeTeamName+ " and "+awayTeamName+" -> Substitute between " +playerOut+" and "+playerIn;
                 ArrayList<String>add=alertSystem.getAllAddressee(game);
                 add.addAll(db.getAllAssignUsersToAlerts());
-                addAlertToDB(content,"Match",add);
-                return "true";
+                String addressee=transferArrayToString(add);
+//                addAlertToDB(content,"Match",add);
+
+                return "true"+",,,,"+"ALERT"+",,,"+content+",,,"+addressee;
             }
         }
 
@@ -732,15 +737,18 @@ public class Model extends Observable {
                 if (teamMember.AddOwner(userExists)) {
                     db.updateUserDetails(newOwner, teamMember.getTeam().getTeamName(), "owners", "CurrentTeam");
                     db.updateUserDetails(newOwner, teamMember.getUserName(), "owners", "EmployedBy");
-                    ans=teamMember.getTeam().getTeamName()+":"+"Owner added Successful";
+                    ans = teamMember.getTeam().getTeamName() + ":" + "Owner added Successful";
                     /**
                      * ===========
                      * ===ALERT===
                      * ===========
                      */
-                    String content="The Owner "+newOwner+" join to "+teamMember.getTeam().getTeamName()+".";
-                    ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
-                    addAlertToDB(content,"Team",add);
+                    String content = "The Owner " + newOwner + " join to " + teamMember.getTeam().getTeamName() + ".";
+                    ArrayList<String> add = alertSystem.getAllAddressee(teamMember.getTeam());
+                    add.add(newOwner);
+                    String addressee = transferArrayToString(add);
+                    ans = ans + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
+//                    addAlertToDB(content,"Team",add);
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Owner added isn't Successful";
@@ -838,7 +846,9 @@ public class Model extends Observable {
                      */
                     String content="The Team Manager "+user+" join to "+teamMember.getTeam().getTeamName()+".";
                     ArrayList<String>add=alertSystem.getAllAddressee(teamMember.getTeam());
-                    addAlertToDB(content,"Team",add);
+                    add.add(user);
+                    String addressee = transferArrayToString(add);
+                    ans = ans + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
                 }
                 else {
                     ans=teamMember.getTeam().getTeamName()+":"+"Manager added isn't Successful";

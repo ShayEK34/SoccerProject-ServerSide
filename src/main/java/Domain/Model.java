@@ -483,7 +483,7 @@ public String logout(String username){
     }
 
     public String addGoalEvent(String homeTeamName, String awayTeamName, String mainRefUser,
-                               String teamPlayerScored, String eventType) {
+                               String teamPlayerScored, String eventType, String minute) {
         if (currentSeasonYear == 0) {
             currentSeasonYear = db.getTheCurrentSeason();
         }
@@ -500,22 +500,7 @@ public String logout(String username){
             }
         }
         if (game != null) {
-            Date startGame = null;
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            try {
-                startGame = dateFormat.parse(game.getGameDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            assert startGame != null;
-            int minuteInGame = getMinuteInMatch(startGame);
-            if(minuteInGame < 0){
-                return "game hasn't started";
-            }
-            else if(minuteInGame > 420 ){
-                return "game is over";
-            }
-            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)
+            if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, minute, playerScored, "", eventType)
                     && db.updateMatchResult(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, teamScored)) {
                 /**
                  * ===========
@@ -536,7 +521,7 @@ public String logout(String username){
     }
 
     public String addOffsideFoulYellowRedInjuryEvent(String homeTeamName, String awayTeamName, String mainRefUser,
-                                                     String teamPlayerScored, String eventType) {
+                                                     String teamPlayerScored, String eventType, String minute) {
         if (currentSeasonYear == 0) {
             currentSeasonYear = db.getTheCurrentSeason();
         }
@@ -552,22 +537,7 @@ public String logout(String username){
             }
         }
         if (game != null) {
-            Date startGame = null;
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            try {
-                startGame = dateFormat.parse(game.getGameDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            assert startGame != null;
-            int minuteInGame = getMinuteInMatch(startGame);
-            if(minuteInGame < 0){
-                return "game hasn't started";
-            }
-            else if(minuteInGame > 420 ){
-                return "game is over";
-            }
-            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerScored, "", eventType)) {
+            if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, minute, playerScored, "", eventType)) {
                 /**
                  * ===========
                  * ===ALERT===
@@ -587,7 +557,7 @@ public String logout(String username){
     }
 
     public String addSubstituteEvent(String homeTeamName, String awayTeamName, String mainRefUser,
-                                     String subs, String eventType) {
+                                     String subs, String eventType, String minute) {
         if (currentSeasonYear == 0) {
             currentSeasonYear = db.getTheCurrentSeason();
         }
@@ -604,22 +574,7 @@ public String logout(String username){
             }
         }
         if (game != null) {
-            Date startGame = null;
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            try {
-                startGame = dateFormat.parse(game.getGameDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            assert startGame != null;
-            int minuteInGame = getMinuteInMatch(startGame);
-            if(minuteInGame < 0){
-                return "game hasn't started";
-            }
-            else if(minuteInGame > 420 ){
-                return "game is over";
-            }
-            else if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, String.valueOf(minuteInGame), playerOut, playerIn, eventType)) {
+            if (db.addMatchEvent(currentSeasonYear, homeTeamName, awayTeamName, mainRefUser, minute, playerOut, playerIn, eventType)) {
                 /**
                  * ===========
                  * ===ALERT===
@@ -986,9 +941,8 @@ public String logout(String username){
 //    }
 //
     public String refApprovesToJudge(String userName ,String reqContent) {
-        //String refUsername = ref.getUserName();
         String ans= "";
-        Referee ref = (Referee) UserDaoMdb.getInstance().getUser(userName);
+        Referee ref = (Referee) db.getUser(userName);
         int season = db.getTheCurrentSeason();
         if (ref.getRefereeRole().equals("Main Referee")) {
             db.updateUserDetails(userName, season, "referees", "SeasonYear");

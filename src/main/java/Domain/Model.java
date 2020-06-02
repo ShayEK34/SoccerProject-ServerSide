@@ -33,6 +33,7 @@ public class Model extends Observable {
 
     private UserDaoMdb db;
     private AlertSystem alertSystem;
+    private ArrayList<String> allLoginUser;
 //    private TeamMember tm;
 //    private AssociationUser au;
 //    private Referee ref;
@@ -47,6 +48,7 @@ public class Model extends Observable {
         db = UserDaoMdb.getInstance();
         currentSeasonYear = db.getTheCurrentSeason();
         alertSystem = AlertSystem.getInstance();
+        allLoginUser=new ArrayList<String>();
     }
 //
 //    /**
@@ -73,6 +75,7 @@ public class Model extends Observable {
         }
         else{
             if(user.getPassword().equals(password)) {
+                allLoginUser.add(username);
                 if (user.getOccupation().equals("TeamMember")) {
                     db.updateUserDetails(username,false,"users","AssignToAlerts");
                     res= "TeamMember";
@@ -684,7 +687,7 @@ public class Model extends Observable {
 
 
             //CloseTeam();
-            return "false";
+            return "false"+",,"+content;
         } else {
             db.updateTeamDetails(tm.getTeamName(), true, "teams", "TeamActiveStatus");
             /**
@@ -696,7 +699,7 @@ public class Model extends Observable {
             ArrayList<String>add=alertSystem.getAllAddressee(tm,db.getAllSystemManagers());
             addAlertToDB(content,"Team",add);
             //OpenTeam();
-            return "true";
+            return "true"+",,"+content;
         }
     }
 

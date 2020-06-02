@@ -43,8 +43,9 @@ public class ClientHandler implements Runnable {
                         //System.out.println((((String)reply)));
                     } else if (splittedstr[0].equals("changeTeamStatus")) {
                         reply = model.changeTeamStatus(splittedstr[1]);
-                        out.println(reply);
-                        sendAllClients("test Alert");
+                        String []split=((String)reply).split(",,");
+                        out.println(split[0]);
+                        sendAllClients(split[1]);
                         //System.out.println((((String)reply)));
                     } else if (splittedstr[0].equals("addTeam")) {
                         reply = model.addTeam(splittedstr[1], splittedstr[2], splittedstr[3], splittedstr[4], splittedstr[5], splittedstr[6]);

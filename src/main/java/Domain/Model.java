@@ -1052,13 +1052,16 @@ public class Model extends Observable {
 
     public String removeAsset(String nameAsset, String userName ) {
         String ans="";
+        String removeUsers="";
         TeamMember teamMember = (TeamMember) db.getUser(userName);
         try {
             for (int i = 0; i < teamMember.getTeam().getTeamCoaches().size(); i++) {
                 if (((TeamMember) teamMember.getTeam().getTeamCoaches().get(i)).getUserName().equals(nameAsset)) {
                     TeamMember coach = (TeamMember) db.getUser(nameAsset);
-                    if (teamMember.RemoveCoach(coach))
+                    if (teamMember.RemoveCoach(coach)) {
                         db.updateUserDetails(nameAsset, "", "coaches", "CurrentTeam");
+                        removeUsers=coach.getUserName();
+                    }
                     db.updateUserDetails(nameAsset, "", "coaches", "EmployedBy");
                     ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
                 }
@@ -1068,19 +1071,13 @@ public class Model extends Observable {
                     TeamMember owner = (TeamMember) db.getUser(nameAsset);
                     if (teamMember.RemoveOwner(owner)) {
                         String removeduser=  db.getAllEmplyedBy(nameAsset);
-                        /**
-                         * ===========
-                         * ===ALERT===
-                         * ===========
-                         */
-                        String content = "The Assets " + removeduser+" removed from "+teamMember.getTeam().getTeamName();
-                        ArrayList<String> add = alertSystem.getAllAddressee(teamMember.getTeam());
-                        String[] s=removeduser.split(",");
-                        for (String u:s) {
-                            add.add(u);
+                        if(removeUsers.equals("")) {
+                            removeUsers = removeduser;
                         }
-                        String addressee = transferArrayToString(add);
-                        addAlertToDB(content,"TeamAlert",add);
+                        else {
+                            removeUsers = removeUsers + "," + removeduser;
+                        }
+
 
 //                        db.updateUserDetails(nameAsset, "", "owners", "CurrentTeam");
 //                        db.updateUserDetails(nameAsset, "", "owners", "EmployedBy");
@@ -1089,7 +1086,7 @@ public class Model extends Observable {
 //                            ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
 //                        }
 //                        else{
-                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser+ ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
+                        ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
 //                        }
                     }
                     else {
@@ -1106,6 +1103,12 @@ public class Model extends Observable {
                         db.updateUserDetails(nameAsset, "", "players", "EmployedBy");
                         ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+"false";
                         db.getAll();
+                        if(removeUsers.equals("")) {
+                            removeUsers = player.getUserName();
+                        }
+                        else {
+                            removeUsers = removeUsers + "," + player.getUserName();
+                        }
                         //db.getAllEmplyedPlayers();
                     }
                 }
@@ -1122,9 +1125,29 @@ public class Model extends Observable {
 //                        db.updateUserDetails(nameAsset, false, "teamManagers", "TeamManagerPermission");
 //                        db.updateUserDetails(nameAsset, false, "teamManagers", "OwnerPermission");
                         ans=teamMember.getTeam().getTeamName()+":"+"Remove Successful"+":"+removeduser;
+                        if(removeUsers.equals("")) {
+                            removeUsers = removeduser;
+                        }
+                        else {
+                            removeUsers = removeUsers + "," + removeduser;
+                        }
                     }
                 }
             }
+            /**
+             * ===========
+             * ===ALERT===
+             * ===========
+             */
+            String content = "The Assets " + removeUsers+" removed from "+teamMember.getTeam().getTeamName();
+            ArrayList<String> add = alertSystem.getAllAddressee(teamMember.getTeam());
+            String[] s=removeUsers.split(",");
+            for (String u:s) {
+                add.add(u);
+            }
+            String addressee = transferArrayToString(add);
+            addAlertToDB(content,"TeamAlert",add);
+            ans = ans + ",,,," + "ALERT" + ",,," + content + ",,," + addressee;
         }
         catch (Exception e){
             ans=teamMember.getTeam().getTeamName()+":"+"Remove isn't Successful";

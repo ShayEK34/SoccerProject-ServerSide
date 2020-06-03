@@ -100,7 +100,7 @@ public class League {
                     players++;
                 }
             }
-            if(players==11){
+            if(players>=11){
                 hasPlayers = true;
             }
 

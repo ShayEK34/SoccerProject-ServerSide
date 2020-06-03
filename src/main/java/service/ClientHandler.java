@@ -43,6 +43,7 @@ public class ClientHandler implements Runnable {
                         //System.out.println((((String)reply)));
                     } else if(splittedstr[0].equals("logout")) {
                         reply=model.logout(splittedstr[1]);
+                        out.println(reply);
                     }else if (splittedstr[0].equals("changeTeamStatus")) {
                         reply = model.changeTeamStatus(splittedstr[1]);
                         String []split=((String)reply).split(",,,,");
